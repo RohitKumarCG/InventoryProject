@@ -1,253 +1,271 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using Inventory.Entities;
-using Inventory.DataAccessLayer;
 using System.Text.RegularExpressions;
-using Inventory.Exceptions;
+using System.Threading.Tasks;
+using Capgemini.Inventory.Contracts.BLContracts;
+using Capgemini.Inventory.Contracts.DALContracts;
+using Capgemini.Inventory.DataAccessLayer;
+using Capgemini.Inventory.Entities;
+using Capgemini.Inventory.Exceptions;
+using Capgemini.Inventory.Helpers.ValidationAttributes;
 
-namespace Inventory.BusinessLayer
+namespace Capgemini.Inventory.BusinessLayer
 {
-
-    //Abstract Class of Business Layer of RawMaterial
-    public abstract class RawMaterialBLAbstract
+    /// <summary>
+    /// Contains data access layer methods for inserting, updating, deleting RawMaterials from RawMaterial's collection.
+    /// </summary>
+    public class RawMaterialBL : BLBase<RawMaterial>, IRawMaterialBL, IDisposable
     {
-        public abstract bool ValidateRawMaterial(RawMaterial rawMaterial);
-        public abstract bool AddRawMaterialBL(RawMaterial newRawMaterial);
-        public abstract bool DeleteRawMaterialBL(string deleteRawMaterialID);
-        public abstract bool UpdateRawMaterialBL(RawMaterial updateRawMaterial, List<RawMaterial> updatedRawMaterialList);
-        public abstract List<RawMaterial> GetAllRawMaterialsBL();
-        public abstract RawMaterial SearchRawMaterialByIDBL(string searchRawMaterialID);
-        public abstract List<RawMaterial> SearchRawMaterialByNameBL(string searchRawMaterialName);
-        public abstract List<RawMaterial> SearchRawMaterialByCodeBL(string searchRawMaterialCode);
-        public abstract bool RawMaterialSerializeBL();
-        public abstract List<RawMaterial> RawMaterialDeserializeBL();
-    }
+        //fields
+        RawMaterialDALBase rawMaterialDAL;
 
-    //Class of Business Layer of RawMaterial
-    public class RawMaterialBL : RawMaterialBLAbstract
-    {
-        //Validate raw material details before adding and updating
-        public override bool ValidateRawMaterial(RawMaterial rawMaterial)
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public RawMaterialBL()
         {
+            this.rawMaterialDAL = new RawMaterialDAL();
+        }
+
+        /// <summary>
+        /// Validations on data before adding or updating.
+        /// </summary>
+        /// <param name="entityObject">Represents object to be validated.</param>
+        /// <returns>Returns a boolean value, that indicates whether the data is valid or not.</returns>
+        protected async override Task<bool> Validate(RawMaterial entityObject)
+        {
+            //Create string builder
             StringBuilder sb = new StringBuilder();
-            bool validRawMaterial = true;
+            bool valid = await base.Validate(entityObject);
 
-            //Rule: Can contain alphabets only,spaces allowed, length less than 30
-            Regex regex1 = new Regex("^[a-zA-Z ]+$");
-            if (!regex1.IsMatch(rawMaterial.RawMaterialName) || rawMaterial.RawMaterialName == String.Empty || rawMaterial.RawMaterialName.Length > 30)
+            //Name is Unique
+            var existingObject1 = await GetRawMaterialByRawMaterialNameBL(entityObject.RawMaterialName);
+            if (existingObject1 != null)
             {
-                validRawMaterial = false;
-                sb.Append("\nInvalid Raw Material Name");
+                valid = false;
+                sb.Append(Environment.NewLine + $"Raw Material Name {entityObject.RawMaterialName} already exists");
             }
 
-            //Rule: Can contain alphabets only,no spaces, length less than 5
-            Regex regex2 = new Regex("^[a-zA-Z]+$");
-            if (!regex2.IsMatch(rawMaterial.RawMaterialCode) || rawMaterial.RawMaterialCode == String.Empty || rawMaterial.RawMaterialCode.Length > 5)
+            //Code is Unique
+            var existingObject2 = await GetRawMaterialByRawMaterialCodeBL(entityObject.RawMaterialCode);
+            if (existingObject2 != null)
             {
-                validRawMaterial = false;
-                sb.Append("\nInvalid Raw Material Code");
+                valid = false;
+                sb.Append(Environment.NewLine + $"Raw Material Code {entityObject.RawMaterialCode} already exists");
             }
 
-            if (validRawMaterial == false)
+            //Price is non negative
+            if(entityObject.RawMaterialPrice < 0)
             {
+                valid = false;
+                sb.Append(Environment.NewLine + $"Raw Material Price {entityObject.RawMaterialPrice} cannot be less than 0");
+            }
+
+            if (valid == false)
                 throw new InventoryException(sb.ToString());
-            }
-            return validRawMaterial;
+            return valid;
         }
 
-        //validate raw material details before calling add
-        public override bool AddRawMaterialBL(RawMaterial newRawMaterial)
+        /// <summary>
+        /// Adds new RawMaterial to RawMaterials collection.
+        /// </summary>
+        /// <param name="newRawMaterial">Contains the RawMaterial details to be added.</param>
+        /// <returns>Determinates whether the new RawMaterial is added.</returns>
+        public async Task<bool> AddRawMaterialBL(RawMaterial newRawMaterial)
         {
-            bool rawMaterialAdded = false;
+            bool RawMaterialAdded = false;
             try
             {
-                if (ValidateRawMaterial(newRawMaterial))
+                if (await Validate(newRawMaterial))
                 {
-                    RawMaterialDAL rawMaterialDAL = new RawMaterialDAL();
-                    rawMaterialAdded = rawMaterialDAL.AddRawMaterialDAL(newRawMaterial);
+                    await Task.Run(() =>
+                    {
+                        this.rawMaterialDAL.AddRawMaterialDAL(newRawMaterial);
+                        RawMaterialAdded = true;
+                        Serialize();
+                    });
                 }
             }
-            catch (InventoryException)
+            catch (Exception)
             {
                 throw;
             }
-            catch (SystemException ex)
-            {
-                throw ex;
-            }
-
-            return rawMaterialAdded;
+            return RawMaterialAdded;
         }
 
-        //validate and call delete
-        public override bool DeleteRawMaterialBL(string deleteRawMaterialID)
+        /// <summary>
+        /// Gets all RawMaterials from the collection.
+        /// </summary>
+        /// <returns>Returns list of all RawMaterials.</returns>
+        public async Task<List<RawMaterial>> GetAllRawMaterialsBL()
         {
-            bool rawMaterialDeleted = false;
+            List<RawMaterial> rawMaterialsList = null;
             try
             {
-                if (deleteRawMaterialID.Length > 0 && deleteRawMaterialID.Length < 6)
+                await Task.Run(() =>
                 {
-                    RawMaterialDAL rawMaterialDAL = new RawMaterialDAL();
-                    rawMaterialDeleted = rawMaterialDAL.DeleteRawMaterialDAL(deleteRawMaterialID);
-                }
-                else
-                {
-                    throw new InventoryException("Invalid Raw Material ID");
-                }
+                    rawMaterialsList = rawMaterialDAL.GetAllRawMaterialsDAL();
+                });
             }
-            catch (InventoryException)
+            catch (Exception)
             {
                 throw;
             }
-            catch (SystemException ex)
-            {
-                throw ex;
-            }
-            return rawMaterialDeleted;
+            return rawMaterialsList;
         }
 
-        //validate raw material details before calling update
-        public override bool UpdateRawMaterialBL(RawMaterial updateRawMaterial, List<RawMaterial> updatedRawMaterialList)
+        /// <summary>
+        /// Gets RawMaterial based on RawMaterialID.
+        /// </summary>
+        /// <param name="searchRawMaterialID">Represents RawMaterialID to search.</param>
+        /// <returns>Returns RawMaterial object.</returns>
+        public async Task<RawMaterial> GetRawMaterialByRawMaterialIDBL(Guid searchRawMaterialID)
         {
-            bool rawMaterialUpdated = false;
+            RawMaterial matchingRawMaterial = null;
             try
             {
-                if (ValidateRawMaterial(updateRawMaterial))
+                await Task.Run(() =>
                 {
-                    RawMaterialDAL rawMaterialDAL = new RawMaterialDAL();
-                    rawMaterialUpdated = rawMaterialDAL.UpdateRawMaterialDAL(updateRawMaterial, updatedRawMaterialList);
-                }
+                    matchingRawMaterial = rawMaterialDAL.GetRawMaterialByRawMaterialIDDAL(searchRawMaterialID);
+                });
             }
-            catch (InventoryException)
+            catch (Exception)
             {
                 throw;
             }
-            catch (SystemException ex)
-            {
-                throw ex;
-            }
-
-            return rawMaterialUpdated;
+            return matchingRawMaterial;
         }
 
-        //calling getAll method
-        public override List<RawMaterial> GetAllRawMaterialsBL()
+        /// <summary>
+        /// Gets RawMaterial based on RawMaterialName.
+        /// </summary>
+        /// <param name="RawMaterialName">Represents RawMaterialName to search.</param>
+        /// <returns>Returns RawMaterial object.</returns>
+        public async Task<RawMaterial> GetRawMaterialByRawMaterialNameBL(string searchRawMaterialName)
         {
-            List<RawMaterial> rawMaterialList = null;
+            RawMaterial matchingRawMaterial = null;
             try
             {
-                RawMaterialDAL rawMaterialDAL = new RawMaterialDAL();
-                rawMaterialList = rawMaterialDAL.GetAllRawMaterialsDAL();
+                await Task.Run(() =>
+                {
+                    matchingRawMaterial = rawMaterialDAL.GetRawMaterialByRawMaterialNameDAL(searchRawMaterialName);
+                });
             }
-            catch (InventoryException ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
-            catch (SystemException ex)
-            {
-                throw ex;
-            }
-            return rawMaterialList;
+            return matchingRawMaterial;
         }
 
-        //calling search method
-        public override RawMaterial SearchRawMaterialByIDBL(string searchRawMaterialID)
+        /// <summary>
+        /// Gets RawMaterial based on RawMaterialCode.
+        /// </summary>
+        /// <param name="searchRawMaterialCode">Represents RawMaterialCode to search.</param>
+        /// <returns>Returns RawMaterial object.</returns>
+        public async Task<RawMaterial> GetRawMaterialByRawMaterialCodeBL(string searchRawMaterialCode)
         {
-            RawMaterial searchRawMaterial = null;
+            RawMaterial matchingRawMaterial = null;
             try
             {
-                RawMaterialDAL rawMaterialDAL = new RawMaterialDAL();
-                searchRawMaterial = rawMaterialDAL.SearchRawMaterialByIDDAL(searchRawMaterialID);
+                await Task.Run(() =>
+                {
+                    matchingRawMaterial = rawMaterialDAL.GetRawMaterialByRawMaterialCodeDAL(searchRawMaterialCode);
+                });
             }
-            catch (InventoryException ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
-            catch (SystemException ex)
-            {
-                throw ex;
-            }
-            return searchRawMaterial;
+            return matchingRawMaterial;
         }
 
-        //calling search method
-        public override List<RawMaterial> SearchRawMaterialByNameBL(string searchRawMaterialName)
+        /// <summary>
+        /// Updates RawMaterial based on RawMaterialID.
+        /// </summary>
+        /// <param name="updateRawMaterial">Represents RawMaterial details including RawMaterialID, RawMaterialName etc.</param>
+        /// <returns>Determinates whether the existing RawMaterial is updated.</returns>
+        public async Task<bool> UpdateRawMaterialBL(RawMaterial updateRawMaterial)
         {
-            List<RawMaterial> searchRawMaterialList = null;
+            bool RawMaterialUpdated = false;
             try
             {
-                RawMaterialDAL rawMaterialDAL = new RawMaterialDAL();
-                searchRawMaterialList = rawMaterialDAL.SearchRawMaterialByNameDAL(searchRawMaterialName);
+                if ((await Validate(updateRawMaterial)) && (await GetRawMaterialByRawMaterialIDBL(updateRawMaterial.RawMaterialID)) != null)
+                {
+                    this.rawMaterialDAL.UpdateRawMaterialDAL(updateRawMaterial);
+                    RawMaterialUpdated = true;
+                    Serialize();
+                }
             }
-            catch (InventoryException ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
-            catch (SystemException ex)
-            {
-                throw ex;
-            }
-            return searchRawMaterialList;
+            return RawMaterialUpdated;
         }
 
-        //calling search method
-        public override List<RawMaterial> SearchRawMaterialByCodeBL(string searchRawMaterialCode)
+        /// <summary>
+        /// Deletes RawMaterial based on RawMaterialID.
+        /// </summary>
+        /// <param name="deleteRawMaterialID">Represents RawMaterialID to delete.</param>
+        /// <returns>Determinates whether the existing RawMaterial is updated.</returns>
+        public async Task<bool> DeleteRawMaterialBL(Guid deleteRawMaterialID)
         {
-            List<RawMaterial> searchRawMaterialList = null;
+            bool RawMaterialDeleted = false;
             try
             {
-                RawMaterialDAL rawMaterialDAL = new RawMaterialDAL();
-                searchRawMaterialList = rawMaterialDAL.SearchRawMaterialByCodeDAL(searchRawMaterialCode);
+                await Task.Run(() =>
+                {
+                    RawMaterialDeleted = rawMaterialDAL.DeleteRawMaterialDAL(deleteRawMaterialID);
+                    Serialize();
+                });
             }
-            catch (InventoryException ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
-            catch (SystemException ex)
-            {
-                throw ex;
-            }
-            return searchRawMaterialList;
+            return RawMaterialDeleted;
         }
 
-        //Serilize Data
-        public override bool RawMaterialSerializeBL()
+        /// <summary>
+        /// Disposes DAL object(s).
+        /// </summary>
+        public void Dispose()
         {
-            bool isSerializationComplete = false;
-            try
-            {
-                RawMaterialDAL rawMaterialDAL = new RawMaterialDAL();
-                rawMaterialDAL.RawMaterialSerializeDAL();
-                isSerializationComplete = true;
-            }
-            catch (SystemException ex)
-            {
-                throw new InventoryException(ex.Message);
-            }
-            return isSerializationComplete;
+            ((RawMaterialDAL)rawMaterialDAL).Dispose();
         }
 
-        //Deserialize Data
-        public override List<RawMaterial> RawMaterialDeserializeBL()
+        /// <summary>
+        /// Invokes Serialize method of DAL.
+        /// </summary>
+        public static void Serialize()
         {
-            List<RawMaterial> rawMaterialDeserializeList = null;
             try
             {
-                RawMaterialDAL rawMaterialDAL = new RawMaterialDAL();
-                rawMaterialDeserializeList = rawMaterialDAL.RawMaterialDeserializeDAL();
+                RawMaterialDAL.Serialize();
             }
-            catch (InventoryException ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
-            catch (SystemException ex)
+        }
+
+        /// <summary>
+        ///Invokes Deserialize method of DAL.
+        /// </summary>
+        public static void Deserialize()
+        {
+            try
             {
-                throw ex;
+                RawMaterialDAL.Deserialize();
             }
-            return rawMaterialDeserializeList;
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
