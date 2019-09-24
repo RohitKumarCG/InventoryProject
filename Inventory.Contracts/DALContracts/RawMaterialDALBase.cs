@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Capgemini.Inventory.Entities;
@@ -12,7 +12,7 @@ namespace Capgemini.Inventory.Contracts.DALContracts
     public abstract class RawMaterialDALBase
     {
         //Collection of RawMaterials
-        protected static List<RawMaterial> RawMaterialList = new List<RawMaterial>();
+        protected static List<RawMaterial> rawMaterialList = new List<RawMaterial>();
         private static string fileName = "RawMaterials.json";
 
         //Methods for CRUD operations
@@ -29,7 +29,7 @@ namespace Capgemini.Inventory.Contracts.DALContracts
         /// </summary>
         public static void Serialize()
         {
-            string serializedJson = JsonConvert.SerializeObject(RawMaterialList);
+            string serializedJson = JsonConvert.SerializeObject(rawMaterialList);
             using (StreamWriter streamWriter = new StreamWriter(fileName))
             {
                 streamWriter.Write(serializedJson);
@@ -53,7 +53,7 @@ namespace Capgemini.Inventory.Contracts.DALContracts
                 var systemUserListFromFile = JsonConvert.DeserializeObject<List<RawMaterial>>(fileContent);
                 if (systemUserListFromFile != null)
                 {
-                    RawMaterialList = systemUserListFromFile;
+                    rawMaterialList = systemUserListFromFile;
                 }
             }
         }
