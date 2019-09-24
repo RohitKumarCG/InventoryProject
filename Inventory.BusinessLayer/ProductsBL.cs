@@ -1,274 +1,293 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using Inventory.Entities;
-using Inventory.Exceptions;
-using Inventory.DataAccessLayer;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Capgemini.Inventory.Contracts.BLContracts;
+using Capgemini.Inventory.Contracts.DALContracts;
+using Capgemini.Inventory.DataAccessLayer;
+using Capgemini.Inventory.Entities;
+using Capgemini.Inventory.Exceptions;
+using Capgemini.Inventory.Helpers.ValidationAttributes;
 
-namespace Inventory.BusinessLayer
+namespace Capgemini.Inventory.BusinessLayer
 {
-    //Abstract Class of Business Layer of Product
-    public abstract class ProductBLAbstract
+    /// <summary>
+    /// Contains data access layer methods for inserting, updating, deleting Products from Product's collection.
+    /// </summary>
+    public class ProductBL : BLBase<Product>, IProductBL, IDisposable
     {
-        public abstract bool ValidateProduct(Product product);
-        public abstract bool AddProductBL(Product newProduct);
-        public abstract bool DeleteProductBL(string deleteProductID);
-        public abstract bool UpdateProductBL(Product updateProduct, List<Product> updatedProductList);
-        public abstract List<Product> GetAllProductsBL();
-        public abstract Product SearchProductByIDBL(string searchProductID);
-        public abstract List<Product> SearchProductByTypeBL(string searchProductType);
-        public abstract List<Product> SearchProductByCodeBL(string searchProductCode);
-        public abstract bool ProductSerializeBL();
-        public abstract List<Product> ProductDeserializeBL();
-    }
+        //fields
+        ProductDALBase productDAL;
 
-    //Class of Business Layer of Product
-    public class ProductBL : ProductBLAbstract
-    {
-        //Validate product details before adding and updating
-        public override bool ValidateProduct(Product product)
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ProductBL()
         {
+            this.productDAL = new ProductDAL();
+        }
+
+        /// <summary>
+        /// Validations on data before adding or updating.
+        /// </summary>
+        /// <param name="entityObject">Represents object to be validated.</param>
+        /// <returns>Returns a boolean value, that indicates whether the data is valid or not.</returns>
+        protected async override Task<bool> Validate(Product entityObject)
+        {
+            //Create string builder
             StringBuilder sb = new StringBuilder();
-            bool validProduct = true;
+            bool valid = await base.Validate(entityObject);
 
-            /*foreach (Product item in ProductDAL.productList)
+            //Name is Unique for each type
+            var existingObject = await GetProductByProductNameBL(entityObject.ProductName);
+            if (existingObject != null && existingObject?.ProductType == entityObject.ProductType)
             {
-                if (item.ProductID == product.ProductID)
-                {
-                    validProduct = false;
-                    sb.Append("\nProduct ID already exists");
-                }
-            }
-            */
-            Regex regex1 = new Regex("^[a-zA-Z ]+$");
-            if (!regex1.IsMatch(product.ProductName) || product.ProductName == String.Empty || product.ProductName.Length > 30)
-            {
-                validProduct = false;
-                sb.Append("\nInvalid Product Name");
+                valid = false;
+                sb.Append(Environment.NewLine + $"Name {entityObject.ProductName} already exists");
             }
 
-            Regex regex2 = new Regex("^[a-zA-Z]+$");
-            if (!regex2.IsMatch(product.ProductCode) || product.ProductCode == String.Empty || product.ProductCode.Length > 4)
+            //Code is Unique
+            var existingObject2 = await GetProductByProductCodeBL(entityObject.ProductCode);
+            if (existingObject2 != null)
             {
-                validProduct = false;
-                sb.Append("\nInvalid Product Code");
-            }
-            DateTime mfd = Convert.ToDateTime(product.ProductMFD);
-            DateTime now = DateTime.Now;
-            int res1 = DateTime.Compare(mfd, now);
-            if (res1 > 0)
-            {
-                validProduct = false;
-                sb.Append("\nInvalid Manufacture Date");
+                valid = false;
+                sb.Append(Environment.NewLine + $"Product Code {entityObject.ProductCode} already exists");
             }
 
-            DateTime exp = Convert.ToDateTime(product.ProductEXP);
-            int res2 = DateTime.Compare(now, exp);
-            if (res2 > 0)
+            //Price is non negative
+            if (entityObject.ProductPrice < 0)
             {
-                validProduct = false;
-                sb.Append("\nInvalid Expiry Date");
+                valid = false;
+                sb.Append(Environment.NewLine + $"Product Price {entityObject.ProductPrice} cannot be less than 0");
             }
 
-            if (validProduct == false)
-            {
+            if (valid == false)
                 throw new InventoryException(sb.ToString());
-            }
-            return validProduct;
+            return valid;
         }
 
-        //validate product details before calling add
-        public override bool AddProductBL(Product newProduct)
+        /// <summary>
+        /// Adds new Product to Products collection.
+        /// </summary>
+        /// <param name="newProduct">Contains the Product details to be added.</param>
+        /// <returns>Determinates whether the new Product is added.</returns>
+        public async Task<bool> AddProductBL(Product newProduct)
         {
-            bool productAdded = false;
+            bool ProductAdded = false;
             try
             {
-                if (ValidateProduct(newProduct))
+                if (await Validate(newProduct))
                 {
-                    ProductDAL productDAL = new ProductDAL();
-                    productAdded = productDAL.AddProductDAL(newProduct);
+                    await Task.Run(() =>
+                    {
+                        this.productDAL.AddProductDAL(newProduct);
+                        ProductAdded = true;
+                        Serialize();
+                    });
                 }
             }
-            catch (InventoryException)
+            catch (Exception)
             {
                 throw;
             }
-            catch (SystemException ex)
-            {
-                throw ex;
-            }
-
-            return productAdded;
+            return ProductAdded;
         }
 
-        //validate and call delete
-        public override bool DeleteProductBL(string deleteProductID)
+        /// <summary>
+        /// Gets all Products from the collection.
+        /// </summary>
+        /// <returns>Returns list of all Products.</returns>
+        public async Task<List<Product>> GetAllProductsBL()
         {
-            bool productDeleted = false;
+            List<Product> ProductsList = null;
             try
             {
-                if (deleteProductID.Length > 0 && deleteProductID.Length < 5)
+                await Task.Run(() =>
                 {
-                    ProductDAL productDAL = new ProductDAL();
-                    productDeleted = productDAL.DeleteProductDAL(deleteProductID);
-                }
-                else
-                {
-                    throw new InventoryException("Invalid Product ID");
-                }
-
+                    ProductsList = productDAL.GetAllProductsDAL();
+                });
             }
-            catch (InventoryException)
+            catch (Exception)
             {
                 throw;
             }
-            catch (SystemException ex)
-            {
-                throw ex;
-            }
-            return productDeleted;
+            return ProductsList;
         }
 
-        //validate raw material details before calling update
-        public override bool UpdateProductBL(Product updateProduct, List<Product> updatedProductList)
+        /// <summary>
+        /// Gets Product based on ProductID.
+        /// </summary>
+        /// <param name="searchProductID">Represents ProductID to search.</param>
+        /// <returns>Returns Product object.</returns>
+        public async Task<Product> GetProductByProductIDBL(Guid searchProductID)
         {
-            bool productUpdated = false;
+            Product matchingProduct = null;
             try
             {
-                ProductDAL productDAL = new ProductDAL();
-                productUpdated = productDAL.UpdateProductDAL(updateProduct, updatedProductList);
-
+                await Task.Run(() =>
+                {
+                    matchingProduct = productDAL.GetProductByProductIDDAL(searchProductID);
+                });
             }
-            catch (InventoryException)
+            catch (Exception)
             {
                 throw;
             }
-            catch (SystemException ex)
-            {
-                throw ex;
-            }
-
-            return productUpdated;
+            return matchingProduct;
         }
 
-        //calling getAll method
-        public override List<Product> GetAllProductsBL()
+        /// <summary>
+        /// Gets Product based on ProductName
+        /// </summary>
+        /// <param name="searchProductName">Represents Product's Name.</param>
+        /// <returns>Returns Product object.</returns>
+        public async Task<Product> GetProductByProductNameBL(string searchProductName)
         {
-            List<Product> productList = null;
+            Product matchingProduct = null;
             try
             {
-                ProductDAL productDAL = new ProductDAL();
-                productList = productDAL.GetAllProductsDAL();
+                await Task.Run(() =>
+                {
+                    matchingProduct = productDAL.GetProductByProductNameDAL(searchProductName);
+                });
             }
-            catch (InventoryException ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
-            catch (SystemException ex)
-            {
-                throw ex;
-            }
-            return productList;
+            return matchingProduct;
         }
 
-        //calling search method
-        public override Product SearchProductByIDBL(string searchProductID)
+        /// <summary>
+        /// Gets Product based on ProductCode
+        /// </summary>
+        /// <param name="searchProductCode">Represents Product's Name.</param>
+        /// <returns>Returns Product object.</returns>
+        public async Task<Product> GetProductByProductCodeBL(string searchProductCode)
         {
-            Product searchProduct = null;
+            Product matchingProduct = null;
             try
             {
-                ProductDAL productDAL = new ProductDAL();
-                searchProduct = productDAL.SearchProductByIDDAL(searchProductID);
+                await Task.Run(() =>
+                {
+                    matchingProduct = productDAL.GetProductByProductCodeDAL(searchProductCode);
+                });
             }
-            catch (InventoryException ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
-            catch (SystemException ex)
-            {
-                throw ex;
-            }
-            return searchProduct;
+            return matchingProduct;
         }
 
-        //calling search method
-        public override List<Product> SearchProductByTypeBL(string searchProductType)
+        /// <summary>
+        /// Gets Products based on ProductType.
+        /// </summary>
+        /// <param name="searchProductType">Represents ProductType to search.</param>
+        /// <returns>Returns Product objects.</returns>
+        public async Task<List<Product>> GetProductsByProductTypeBL(string searchProductType)
         {
-            List<Product> searchProductList = null;
+            List<Product> matchingProducts = new List<Product>();
             try
             {
-                ProductDAL productDAL = new ProductDAL();
-                searchProductList = productDAL.SearchProductByTypeDAL(searchProductType);
+                await Task.Run(() =>
+                {
+                    matchingProducts = productDAL.GetProductsByProductTypeDAL(searchProductType);
+                });
             }
-            catch (InventoryException ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
-            catch (SystemException ex)
-            {
-                throw ex;
-            }
-            return searchProductList;
+            return matchingProducts;
         }
 
-        //calling search method
-        public override List<Product> SearchProductByCodeBL(string searchProductCode)
+        /// <summary>
+        /// Updates Product based on ProductID.
+        /// </summary>
+        /// <param name="updateProduct">Represents Product details including ProductID, ProductName etc.</param>
+        /// <returns>Determinates whether the existing Product is updated.</returns>
+        public async Task<bool> UpdateProductBL(Product updateProduct)
         {
-            List<Product> searchProductList = null;
+            bool ProductUpdated = false;
             try
             {
-                ProductDAL productDAL = new ProductDAL();
-                searchProductList = productDAL.SearchProductByCodeDAL(searchProductCode);
+                if ((await Validate(updateProduct)) && (await GetProductByProductIDBL(updateProduct.ProductID)) != null)
+                {
+                    this.productDAL.UpdateProductDAL(updateProduct);
+                    ProductUpdated = true;
+                    Serialize();
+                }
             }
-            catch (InventoryException ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
-            catch (SystemException ex)
-            {
-                throw ex;
-            }
-            return searchProductList;
+            return ProductUpdated;
         }
 
-        //Serilize Data
-        public override bool ProductSerializeBL()
+        /// <summary>
+        /// Deletes Product based on ProductID.
+        /// </summary>
+        /// <param name="deleteProductID">Represents ProductID to delete.</param>
+        /// <returns>Determinates whether the existing Product is updated.</returns>
+        public async Task<bool> DeleteProductBL(Guid deleteProductID)
         {
-            bool isSerializationComplete = false;
+            bool ProductDeleted = false;
             try
             {
-                ProductDAL productDAL = new ProductDAL();
-                productDAL.ProductSerializeDAL();
-                isSerializationComplete = true;
+                await Task.Run(() =>
+                {
+                    ProductDeleted = productDAL.DeleteProductDAL(deleteProductID);
+                    Serialize();
+                });
             }
-            catch (SystemException ex)
+            catch (Exception)
             {
-                throw new InventoryException(ex.Message);
+                throw;
             }
-            return isSerializationComplete;
+            return ProductDeleted;
         }
 
-        //Deserialize Data
-        public override List<Product> ProductDeserializeBL()
+        /// <summary>
+        /// Disposes DAL object(s).
+        /// </summary>
+        public void Dispose()
         {
-            List<Product> productDeserializeList = null;
+            ((ProductDAL)productDAL).Dispose();
+        }
+
+        /// <summary>
+        /// Invokes Serialize method of DAL.
+        /// </summary>
+        public static void Serialize()
+        {
             try
             {
-                ProductDAL productDAL = new ProductDAL();
-                productDeserializeList = productDAL.ProductDeserializeDAL();
+                ProductDAL.Serialize();
             }
-            catch (InventoryException ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
-            catch (SystemException ex)
+        }
+
+        /// <summary>
+        ///Invokes Deserialize method of DAL.
+        /// </summary>
+        public static void Deserialize()
+        {
+            try
             {
-                throw ex;
+                ProductDAL.Deserialize();
             }
-            return productDeserializeList;
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
