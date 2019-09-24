@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Capgemini.Inventory.Entities;
@@ -12,16 +12,16 @@ namespace Capgemini.Inventory.Contracts.DALContracts
     public abstract class ProductDALBase
     {
         //Collection of Products
-        protected static List<Product> ProductList = new List<Product>();
+        protected static List<Product> productList = new List<Product>();
         private static string fileName = "Products.json";
 
         //Methods for CRUD operations
         public abstract bool AddProductDAL(Product newProduct);
         public abstract List<Product> GetAllProductsDAL();
         public abstract Product GetProductByProductIDDAL(Guid searchProductID);
-        public abstract Product GetProductByNameDAL(string searchProductName);
-        public abstract Product GetProductByCodeDAL(string searchProductCode);
-        public abstract List<Product> GetProductsByTypeDAL(string searchProductType);
+        public abstract Product GetProductByProductNameDAL(string searchProductName);
+        public abstract Product GetProductByProductCodeDAL(string searchProductCode);
+        public abstract List<Product> GetProductsByProductTypeDAL(string searchProductType);
         public abstract bool UpdateProductDAL(Product updateProduct);
         public abstract bool DeleteProductDAL(Guid deleteProductID);
 
@@ -30,7 +30,7 @@ namespace Capgemini.Inventory.Contracts.DALContracts
         /// </summary>
         public static void Serialize()
         {
-            string serializedJson = JsonConvert.SerializeObject(ProductList);
+            string serializedJson = JsonConvert.SerializeObject(productList);
             using (StreamWriter streamWriter = new StreamWriter(fileName))
             {
                 streamWriter.Write(serializedJson);
@@ -54,7 +54,7 @@ namespace Capgemini.Inventory.Contracts.DALContracts
                 var systemUserListFromFile = JsonConvert.DeserializeObject<List<Product>>(fileContent);
                 if (systemUserListFromFile != null)
                 {
-                    ProductList = systemUserListFromFile;
+                    productList = systemUserListFromFile;
                 }
             }
         }
