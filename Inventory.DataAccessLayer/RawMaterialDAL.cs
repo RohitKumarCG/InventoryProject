@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,7 +28,7 @@ namespace Capgemini.Inventory.DataAccessLayer
                 newRawMaterial.RawMaterialID = Guid.NewGuid();
                 newRawMaterial.CreationDateTime = DateTime.Now;
                 newRawMaterial.LastModifiedDateTime = DateTime.Now;
-                RawMaterialList.Add(newRawMaterial);
+                rawMaterialList.Add(newRawMaterial);
                 RawMaterialAdded = true;
             }
             catch (Exception)
@@ -44,7 +44,7 @@ namespace Capgemini.Inventory.DataAccessLayer
         /// <returns>Returns list of all RawMaterials.</returns>
         public override List<RawMaterial> GetAllRawMaterialsDAL()
         {
-            return RawMaterialList;
+            return rawMaterialList;
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Capgemini.Inventory.DataAccessLayer
             try
             {
                 //Find RawMaterial based on searchRawMaterialID
-                matchingRawMaterial = RawMaterialList.Find(
+                matchingRawMaterial = rawMaterialList.Find(
                     (item) => { return item.RawMaterialID == searchRawMaterialID; }
                 );
             }
@@ -80,7 +80,7 @@ namespace Capgemini.Inventory.DataAccessLayer
             try
             {
                 //Find All RawMaterials based on RawMaterialName
-                matchingRawMaterial = RawMaterialList.Find(
+                matchingRawMaterial = rawMaterialList.Find(
                     (item) => { return item.RawMaterialName.Equals(searchRawMaterialName, StringComparison.OrdinalIgnoreCase); }
                 );
             }
@@ -101,8 +101,8 @@ namespace Capgemini.Inventory.DataAccessLayer
             RawMaterial matchingRawMaterial = null;
             try
             {
-                //Find RawMaterial based on Email and Password
-                matchingRawMaterial = RawMaterialList.Find(
+                //Find RawMaterial based on Code
+                matchingRawMaterial = rawMaterialList.Find(
                     (item) => { return item.RawMaterialCode.Equals(searchRawMaterialCode); }
                 );
             }
@@ -129,7 +129,7 @@ namespace Capgemini.Inventory.DataAccessLayer
                 if (matchingRawMaterial != null)
                 {
                     //Update RawMaterial details
-                    ReflectionHelpers.CopyProperties(updateRawMaterial, matchingRawMaterial, new List<string>() { "RawMaterialName", "RawMaterialCode", "Price" });
+                    ReflectionHelpers.CopyProperties(updateRawMaterial, matchingRawMaterial, new List<string>() { "RawMaterialName", "RawMaterialCode", "RawMaterialPrice" });
                     matchingRawMaterial.LastModifiedDateTime = DateTime.Now;
 
                     RawMaterialUpdated = true;
@@ -153,14 +153,14 @@ namespace Capgemini.Inventory.DataAccessLayer
             try
             {
                 //Find RawMaterial based on searchRawMaterialID
-                RawMaterial matchingRawMaterial = RawMaterialList.Find(
+                RawMaterial matchingRawMaterial = rawMaterialList.Find(
                     (item) => { return item.RawMaterialID == deleteRawMaterialID; }
                 );
 
                 if (matchingRawMaterial != null)
                 {
                     //Delete RawMaterial from the collection
-                    RawMaterialList.Remove(matchingRawMaterial);
+                    rawMaterialList.Remove(matchingRawMaterial);
                     RawMaterialDeleted = true;
                 }
             }
