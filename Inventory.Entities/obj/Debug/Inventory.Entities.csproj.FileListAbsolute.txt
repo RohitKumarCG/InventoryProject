@@ -1,0 +1,9 @@
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.Entities\bin\Debug\Inventory.Entities.dll
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.Entities\bin\Debug\Inventory.Entities.pdb
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.Entities\obj\Debug\Inventory.Entities.csprojAssemblyReference.cache
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.Entities\obj\Debug\Inventory.Entities.csproj.CoreCompileInputs.cache
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.Entities\obj\Debug\Inventory.Entities.dll
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.Entities\obj\Debug\Inventory.Entities.pdb
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.Entities\bin\Debug\Newtonsoft.Json.dll
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.Entities\bin\Debug\Newtonsoft.Json.xml
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.Entities\obj\Debug\Inventory.Entities.csproj.CopyComplete

@@ -1,0 +1,13 @@
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.DataAccessLayer\bin\Debug\Inventory.DataAccessLayer.dll
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.DataAccessLayer\bin\Debug\Inventory.DataAccessLayer.pdb
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.DataAccessLayer\bin\Debug\Inventory.Entities.dll
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.DataAccessLayer\bin\Debug\Inventory.Exception.dll
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.DataAccessLayer\bin\Debug\Inventory.Entities.pdb
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.DataAccessLayer\bin\Debug\Inventory.Exception.pdb
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.DataAccessLayer\obj\Debug\Inventory.DataAccessLayer.csprojAssemblyReference.cache
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.DataAccessLayer\obj\Debug\Inventory.DataAccessLayer.csproj.CoreCompileInputs.cache
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.DataAccessLayer\obj\Debug\Inventory.DataAccessLayer.csproj.CopyComplete
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.DataAccessLayer\obj\Debug\Inventory.DataAccessLayer.dll
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.DataAccessLayer\obj\Debug\Inventory.DataAccessLayer.pdb
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.DataAccessLayer\bin\Debug\Newtonsoft.Json.dll
+C:\Users\rkuma415\source\repos\case_study\Inventory.PresentationLayer\Inventory.DataAccessLayer\bin\Debug\Newtonsoft.Json.xml
