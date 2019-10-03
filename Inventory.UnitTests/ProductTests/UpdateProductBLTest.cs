@@ -24,8 +24,8 @@ namespace Capgemini.Inventory.UnitTests
             //Arrange
             ProductBL productBL = new ProductBL();
             Product product1 = new Product() { ProductName = "MangoJuice", ProductCode = "MAJ", ProductPrice = 20 };
-            Product product2 = new Product() { ProductID = product1.ProductID, ProductName = "MangooJuice", ProductCode = "MANJ", ProductPrice = 35 };
             await productBL.AddProductBL(product1);
+            Product product2 = new Product() { ProductID = product1.ProductID, ProductName = "MangooJuice", ProductCode = "MANJ", ProductPrice = 35 };
             bool isUpdated = false;
             string errorMessage = null;
 
@@ -55,15 +55,15 @@ namespace Capgemini.Inventory.UnitTests
             //Arrange
             ProductBL productBL = new ProductBL();
             Product product1 = new Product() { ProductName = "MangoJuice", ProductCode = "MAJ", ProductPrice = 30 };
-            Product product2 = new Product() { ProductID = product1.ProductID, ProductName = null, ProductCode = "MANJ", ProductPrice = 35 };
             await productBL.AddProductBL(product1);
+            Product product2 = new Product() { ProductID = product1.ProductID, ProductName = null, ProductCode = "MANJ", ProductPrice = 35 };
             bool isUpdated = false;
             string errorMessage = null;
 
             //Act
             try
             {
-                isUpdated = await productBL.AddProductBL(product2);
+                isUpdated = await productBL.UpdateProductBL(product2);
             }
             catch (Exception ex)
             {
@@ -86,15 +86,15 @@ namespace Capgemini.Inventory.UnitTests
             //Arrange
             ProductBL productBL = new ProductBL();
             Product product1 = new Product() { ProductName = "MangoJuice", ProductCode = "MAJ", ProductPrice = 30 };
-            Product product2 = new Product() { ProductID = product1.ProductID, ProductName = "MangooJuice", ProductCode = null, ProductPrice = 35 };
             await productBL.AddProductBL(product1);
+            Product product2 = new Product() { ProductID = product1.ProductID, ProductName = "MangooJuice", ProductCode = null, ProductPrice = 35 };
             bool isUpdated = false;
             string errorMessage = null;
 
             //Act
             try
             {
-                isUpdated = await productBL.AddProductBL(product2);
+                isUpdated = await productBL.UpdateProductBL(product2);
             }
             catch (Exception ex)
             {
@@ -117,15 +117,15 @@ namespace Capgemini.Inventory.UnitTests
             //Arrange
             ProductBL productBL = new ProductBL();
             Product product1 = new Product() { ProductName = "MangoJuice", ProductCode = "MAJ", ProductPrice = 30 };
-            Product product2 = new Product() { ProductID = product1.ProductID, ProductName = "MangooJuice", ProductCode = "MAAJ", ProductPrice = 0 };
             await productBL.AddProductBL(product1);
+            Product product2 = new Product() { ProductID = product1.ProductID, ProductName = "MangooJuice", ProductCode = "MAAJ", ProductPrice = 0 };
             bool isUpdated = false;
             string errorMessage = null;
 
             //Act
             try
             {
-                isUpdated = await productBL.AddProductBL(product2);
+                isUpdated = await productBL.UpdateProductBL(product2);
             }
             catch (Exception ex)
             {
@@ -148,15 +148,15 @@ namespace Capgemini.Inventory.UnitTests
             //Arrange
             ProductBL productBL = new ProductBL();
             Product product1 = new Product() { ProductName = "MangoJuice", ProductCode = "MAJ", ProductPrice = 30 };
-            Product product2 = new Product() { ProductID = product1.ProductID, ProductName = "MangooJuice", ProductCode = "MAAJ", ProductPrice = -10 };
             await productBL.AddProductBL(product1);
+            Product product2 = new Product() { ProductID = product1.ProductID, ProductName = "MangooJuice", ProductCode = "MAAJ", ProductPrice = -10 };
             bool isUpdated = false;
             string errorMessage = null;
 
             //Act
             try
             {
-                isUpdated = await productBL.AddProductBL(product2);
+                isUpdated = await productBL.UpdateProductBL(product2);
             }
             catch (Exception ex)
             {
@@ -179,15 +179,15 @@ namespace Capgemini.Inventory.UnitTests
             //Arrange
             ProductBL productBL = new ProductBL();
             Product product1 = new Product() { ProductName = "MangoJuice", ProductCode = "MAJ", ProductPrice = 30 };
-            Product product2 = new Product() { ProductID = product1.ProductID, ProductName = "M", ProductCode = "MAAJ", ProductPrice = 40 };
             await productBL.AddProductBL(product1);
+            Product product2 = new Product() { ProductID = product1.ProductID, ProductName = "M", ProductCode = "MAAJ", ProductPrice = 40 };
             bool isUpdated = false;
             string errorMessage = null;
 
             //Act
             try
             {
-                isUpdated = await productBL.AddProductBL(product2);
+                isUpdated = await productBL.UpdateProductBL(product2);
             }
             catch (Exception ex)
             {
@@ -210,15 +210,15 @@ namespace Capgemini.Inventory.UnitTests
             //Arrange
             ProductBL productBL = new ProductBL();
             Product product1 = new Product() { ProductName = "MangoJuice", ProductCode = "MAJ", ProductPrice = 30 };
-            Product product2 = new Product() { ProductID = product1.ProductID, ProductName = "MangooJuice", ProductCode = "M", ProductPrice = 40 };
             await productBL.AddProductBL(product1);
+            Product product2 = new Product() { ProductID = product1.ProductID, ProductName = "MangooJuice", ProductCode = "M", ProductPrice = 40 };
             bool isUpdated = false;
             string errorMessage = null;
 
             //Act
             try
             {
-                isUpdated = await productBL.AddProductBL(product2);
+                isUpdated = await productBL.UpdateProductBL(product2);
             }
             catch (Exception ex)
             {
@@ -241,15 +241,15 @@ namespace Capgemini.Inventory.UnitTests
             //Arrange
             ProductBL productBL = new ProductBL();
             Product product1 = new Product() { ProductName = "MangoJuice", ProductCode = "MAJ", ProductPrice = 30 };
-            Product product2 = new Product() { ProductID = default(Guid), ProductName = "MangooJuice", ProductCode = "MAAJ", ProductPrice = 40 };
             await productBL.AddProductBL(product1);
+            Product product2 = new Product() { ProductID = default(Guid), ProductName = "MangooJuice", ProductCode = "MAAJ", ProductPrice = 40 };
             bool isUpdated = false;
             string errorMessage = null;
 
             //Act
             try
             {
-                isUpdated = await productBL.AddProductBL(product2);
+                isUpdated = await productBL.UpdateProductBL(product2);
             }
             catch (Exception ex)
             {
