@@ -32,7 +32,7 @@ namespace Capgemini.Inventory.UnitTests
             try
             {
                 List<Product> productList = await productBL.GetAllProductsBL();
-                if (productList.Count < 1)
+                if (productList.Count > 0)
                 {
                     isDisplayed = true;
                 }
