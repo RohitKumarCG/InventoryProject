@@ -6,9 +6,10 @@ import { RawMaterial } from '../Models/raw-material';
 @Injectable({
   providedIn: 'root'
 })
-
-export class RawMaterialsService {
-  constructor(private httpClient: HttpClient) {
+export class RawMaterialsService
+{
+  constructor(private httpClient: HttpClient)
+  {
   }
 
   AddRawMaterial(rawmaterial: RawMaterial): Observable<boolean>
@@ -16,44 +17,47 @@ export class RawMaterialsService {
     rawmaterial.creationDateTime = new Date().toLocaleDateString();
     rawmaterial.lastModifiedDateTime = new Date().toLocaleDateString();
     rawmaterial.rawMaterialID = this.uuidv4();
-    return this.httpClient.post<boolean>(`/api/rawMaterials`, rawmaterial);
+    return this.httpClient.post<boolean>(`/api/rawmaterials`, rawmaterial);
   }
 
   UpdateRawMaterial(rawmaterial: RawMaterial): Observable<boolean>
   {
     rawmaterial.lastModifiedDateTime = new Date().toLocaleDateString();
-    return this.httpClient.put<boolean>(`/api/rawMaterials`, rawmaterial);
+    return this.httpClient.put<boolean>(`/api/rawmaterials`, rawmaterial);
   }
 
-  DeleteRawMaterial(RawMaterialID: string, ID: number): Observable<boolean>
+  DeleteRawMaterial(RawmaterialID: string, ID: number): Observable<boolean>
   {
-    return this.httpClient.delete<boolean>(`/api/rawMaterials/${ID}`);
+    return this.httpClient.delete<boolean>(`/api/rawmaterials/${ID}`);
   }
 
   GetAllRawMaterials(): Observable<RawMaterial[]>
   {
-    return this.httpClient.get<RawMaterial[]>(`/api/rawMaterials`);
+    return this.httpClient.get<RawMaterial[]>(`/api/rawmaterials`);
   }
 
-  GetRawMaterialByRawMaterialID(RawMaterialID: string): Observable<RawMaterial>
+  GetRawMaterialByRawMaterialID(RawMaterialID: number): Observable<RawMaterial>
   {
-    return this.httpClient.get<RawMaterial>(`/api/rawMaterials?rawMaterialID=${RawMaterialID}`);
+    return this.httpClient.get<RawMaterial>(`/api/rawmaterials?rawMaterialID=${RawMaterialID}`);
   }
 
-  GetRawMaterialByRawMaterialName(RawMaterialName: string): Observable<RawMaterial[]>
+  GetRawMaterialsByRawMaterialName(RawMaterialName: string): Observable<RawMaterial>
   {
-    return this.httpClient.get<RawMaterial[]>(`/api/rawMaterials?rawMaterialName=${RawMaterialName}`);
+    return this.httpClient.get<RawMaterial>(`/api/rawmaterials?rawMaterialName=${RawMaterialName}`);
   }
 
-  GetRawMaterialByCode(Code: string): Observable<RawMaterial>
+  GetRawMaterialByRawMaterialCode(RawMaterialCode: string): Observable<RawMaterial>
   {
-    return this.httpClient.get<RawMaterial>(`/api/rawMaterials?rawMaterialCode=${Code}`);
+    return this.httpClient.get<RawMaterial>(`/api/rawmaterials?rawMaterialCode=${RawMaterialCode}`);
   }
 
-  uuidv4() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+  uuidv4()
+  {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c)
+    {
       var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
     });
   }
 }
+

@@ -4,13 +4,17 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AdminHomeComponent } from './admin-home/admin-home.component';
 import { SuppliersComponent } from './suppliers/suppliers.component';
 import { AdminRoutingModule } from './admin-routing.module';
+import { NewOrderComponent } from './new-order/new-order.component';
 import { RawMaterialsComponent } from './raw-materials/raw-materials.component';
+import { ProductsComponent } from './products/products.component';
 
 @NgModule({
   declarations: [
     AdminHomeComponent,
     SuppliersComponent,
-    RawMaterialsComponent
+    NewOrderComponent,
+    RawMaterialsComponent,
+    ProductsComponent
   ],
   imports: [
     CommonModule,
@@ -22,7 +26,9 @@ import { RawMaterialsComponent } from './raw-materials/raw-materials.component';
     AdminRoutingModule,
     AdminHomeComponent,
     SuppliersComponent,
-    RawMaterialsComponent
+    NewOrderComponent,
+    RawMaterialsComponent,
+    ProductsComponent
   ]
 })
 export class AdminModule { }

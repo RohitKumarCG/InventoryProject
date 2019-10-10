@@ -135,8 +135,6 @@ export class SuppliersComponent extends InventoryComponentBase implements OnInit
     }
   }
 
-
-
   getFormControlCssClass(formControl: FormControl, formGroup: FormGroup): any
   {
     return {
@@ -154,8 +152,6 @@ export class SuppliersComponent extends InventoryComponentBase implements OnInit
   {
     return formGroup.get(formControlName).invalid && (formGroup.get(formControlName).dirty || formGroup.get(formControlName).touched || formGroup['submitted']) && formGroup.get(formControlName).errors[validationProperty];
   }
-
-
 
   onEditSupplierClick(index)
   {
@@ -208,8 +204,6 @@ export class SuppliersComponent extends InventoryComponentBase implements OnInit
     }
   }
 
-
-
   onDeleteSupplierClick(index)
   {
     this.deleteSupplierForm.reset();
@@ -257,8 +251,6 @@ export class SuppliersComponent extends InventoryComponentBase implements OnInit
     }
   }
 
-
-
   onViewSelectAllClick()
   {
     for (let propertyName of Object.keys(this.viewSupplierCheckBoxes))
@@ -301,6 +293,3 @@ export class SuppliersComponent extends InventoryComponentBase implements OnInit
 
   }
 }
-
-
-

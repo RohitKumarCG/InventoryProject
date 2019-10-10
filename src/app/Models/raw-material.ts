@@ -4,17 +4,17 @@ export class RawMaterial
   rawMaterialID: string;
   rawMaterialCode: string;
   rawMaterialName: string;
-  unitPrice: number;
+  rawMaterialUnitPrice: number;
   creationDateTime: string;
   lastModifiedDateTime: string;
 
-  constructor(ID: number, RawMaterialID: string, RawMaterialCode: string, RawMaterialName: string, UnitPrice: number, CreationDateTime: string, LastModifiedDateTime: string)
+  constructor(ID: number, RawMaterialID: string, RawMaterialCode: string, RawMaterialName: string, RawMaterialUnitPrice: number, CreationDateTime: string, LastModifiedDateTime: string)
   {
     this.id = ID;
     this.rawMaterialID = RawMaterialID;
     this.rawMaterialCode = RawMaterialCode;
     this.rawMaterialName = RawMaterialName;
-    this.unitPrice = UnitPrice;
+    this.rawMaterialUnitPrice = RawMaterialUnitPrice;
     this.creationDateTime = CreationDateTime;
     this.lastModifiedDateTime = LastModifiedDateTime;
   }
