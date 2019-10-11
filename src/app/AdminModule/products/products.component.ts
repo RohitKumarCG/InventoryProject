@@ -30,107 +30,93 @@ export class ProductsComponent extends InventoryComponentBase implements OnInit
   deleteProductForm: FormGroup;
   deleteProductDisabled: boolean = false;
 
-  constructor(private productsService: ProductsService)
-  {
+  constructor(private productsService: ProductsService) {
     super();
     this.newProductForm = new FormGroup({
       productName: new FormControl(null, [Validators.required, Validators.minLength(2), Validators.maxLength(40)]),
       productCode: new FormControl(null, [Validators.required, Validators.minLength(2), Validators.maxLength(40)]),
-      productUnitPrice: new FormControl(null, [Validators.required]),
+      productType: new FormControl(null, [Validators.required]),
+      productUnitPrice: new FormControl(null, [Validators.required])
     });
 
-    this.newProductFormErrorMessages =
-    {
+    this.newProductFormErrorMessages = {
       productName: { required: "Product Name can't be blank", minlength: "Product Name should contain at least 2 characters", maxlength: "Product Name can't be longer than 40 characters" },
       productCode: { required: "Product Code can't be blank", minlength: "Product Code should contain at least 2 characters", maxlength: "Product Code can't be longer than 40 characters" },
-      productUnitPrice: { required: "Unit Price can't be blank"}
+      productType: { required: "Type can't be blank" },
+      productUnitPrice: { required: "Unit Price can't be blank" }
     };
 
-    this.editProductForm = new FormGroup(
-    {
+    this.editProductForm = new FormGroup({
       id: new FormControl(null),
       productID: new FormControl(null),
       productName: new FormControl(null, [Validators.required, Validators.minLength(2), Validators.maxLength(40)]),
       productCode: new FormControl(null, [Validators.required, Validators.minLength(2), Validators.maxLength(40)]),
+      productType: new FormControl(null, [Validators.required]),
       productUnitPrice: new FormControl(null, [Validators.required]),
       creationDateTime: new FormControl(null)
     });
 
-    this.editProductFormErrorMessages =
-    {
+    this.editProductFormErrorMessages = {
       productName: { required: "Product Name can't be blank", minlength: "Product Name should contain at least 2 characters", maxlength: "Product Name can't be longer than 40 characters" },
       productCode: { required: "Product Code can't be blank", minlength: "Product Code should contain at least 2 characters", maxlength: "Product Code can't be longer than 40 characters" },
       productUnitPrice: { required: "Unit Price can't be blank" }
     };
 
-    this.viewProductCheckBoxes =
-    {
+    this.viewProductCheckBoxes = {
       productName: true,
       productCode: true,
-      productUnitPrice: true,
       productType: true,
+      productUnitPrice: true,
       createdOn: true,
       lastModifiedOn: true
     };
 
-    this.deleteProductForm = new FormGroup(
-    {
+    this.deleteProductForm = new FormGroup({
       id: new FormControl(null),
       productID: new FormControl(null),
       productName: new FormControl(null)
     });
   }
 
-  ngOnInit()
-  {
+  ngOnInit() {
     this.showProductsSpinner = true;
-    this.productsService.GetAllProducts().subscribe((response) =>
-    {
+    this.productsService.GetAllProducts().subscribe((response) => {
       this.products = response;
       this.showProductsSpinner = false;
-    }, (error) =>
-      {
-        console.log(error);
-      })
+    }, (error) => {
+      console.log(error);
+    })
   }
 
-  onCreateProductClick()
-  {
+  onCreateProductClick() {
     this.newProductForm.reset();
     this.newProductForm["submitted"] = false;
   }
 
-  onAddProductClick(event)
-  {
+  onAddProductClick(event) {
     this.newProductForm["submitted"] = true;
-    if (this.newProductForm.valid)
-    {
+    if (this.newProductForm.valid) {
       this.newProductDisabled = true;
       var product: Product = this.newProductForm.value;
 
-      this.productsService.AddProduct(product).subscribe((addResponse) =>
-      {
+      this.productsService.AddProduct(product).subscribe((addResponse) => {
         this.newProductForm.reset();
         $("#btnAddProductCancel").trigger("click");
         this.newProductDisabled = false;
         this.showProductsSpinner = true;
 
-        this.productsService.GetAllProducts().subscribe((getResponse) =>
-        {
+        this.productsService.GetAllProducts().subscribe((getResponse) => {
           this.showProductsSpinner = false;
           this.products = getResponse;
-        }, (error) =>
-          {
-            console.log(error);
-          });
+        }, (error) => {
+          console.log(error);
+        });
       },
-        (error) =>
-        {
+        (error) => {
           console.log(error);
           this.newProductDisabled = false;
         });
     }
-
     else {
       super.getFormGroupErrors(this.newProductForm);
     }
@@ -143,18 +129,15 @@ export class ProductsComponent extends InventoryComponentBase implements OnInit
     };
   }
 
-  getFormControlErrorMessage(formControlName: string, validationProperty: string): string
-  {
+  getFormControlErrorMessage(formControlName: string, validationProperty: string): string {
     return this.newProductFormErrorMessages[formControlName][validationProperty];
   }
 
-  getCanShowFormControlErrorMessage(formControlName: string, validationProperty: string, formGroup: FormGroup): boolean
-  {
+  getCanShowFormControlErrorMessage(formControlName: string, validationProperty: string, formGroup: FormGroup): boolean {
     return formGroup.get(formControlName).invalid && (formGroup.get(formControlName).dirty || formGroup.get(formControlName).touched || formGroup['submitted']) && formGroup.get(formControlName).errors[validationProperty];
   }
 
-  onEditProductClick(index)
-  {
+  onEditProductClick(index) {
     this.editProductForm.reset();
     this.editProductForm["submitted"] = false;
     this.editProductForm.patchValue({
@@ -168,43 +151,36 @@ export class ProductsComponent extends InventoryComponentBase implements OnInit
     });
   }
 
-  onUpdateProductClick(event)
-  {
+  onUpdateProductClick(event) {
     this.editProductForm["submitted"] = true;
-    if (this.editProductForm.valid)
-    {
+    if (this.editProductForm.valid) {
       this.editProductDisabled = true;
       var product: Product = this.editProductForm.value;
 
-      this.productsService.UpdateProduct(product).subscribe((updateResponse) =>
-      {
+      this.productsService.UpdateProduct(product).subscribe((updateResponse) => {
         this.editProductForm.reset();
         $("#btnUpdateProductCancel").trigger("click");
         this.editProductDisabled = false;
         this.showProductsSpinner = true;
 
-        this.productsService.GetAllProducts().subscribe((getResponse) =>
-        {
+        this.productsService.GetAllProducts().subscribe((getResponse) => {
           this.showProductsSpinner = false;
           this.products = getResponse;
         }, (error) => {
           console.log(error);
         });
       },
-        (error) =>
-        {
+        (error) => {
           console.log(error);
           this.editProductDisabled = false;
         });
     }
-    else
-    {
+    else {
       super.getFormGroupErrors(this.editProductForm);
     }
   }
 
-  onDeleteProductClick(index)
-  {
+  onDeleteProductClick(index) {
     this.deleteProductForm.reset();
     this.deleteProductForm["submitted"] = false;
     this.deleteProductForm.patchValue({
@@ -214,54 +190,43 @@ export class ProductsComponent extends InventoryComponentBase implements OnInit
     });
   }
 
-  onDeleteProductConfirmClick(event)
-  {
+  onDeleteProductConfirmClick(event) {
     this.deleteProductForm["submitted"] = true;
-    if (this.deleteProductForm.valid)
-    {
+    if (this.deleteProductForm.valid) {
       this.deleteProductDisabled = true;
       var product: Product = this.deleteProductForm.value;
 
-      this.productsService.DeleteProduct(product.productID, product.id).subscribe((deleteResponse) =>
-      {
+      this.productsService.DeleteProduct(product.productID, product.id).subscribe((deleteResponse) => {
         this.deleteProductForm.reset();
         $("#btnDeleteProductCancel").trigger("click");
         this.deleteProductDisabled = false;
         this.showProductsSpinner = true;
 
-        this.productsService.GetAllProducts().subscribe((getResponse) =>
-        {
+        this.productsService.GetAllProducts().subscribe((getResponse) => {
           this.showProductsSpinner = false;
           this.products = getResponse;
-        }, (error) =>
-          {
-            console.log(error);
-          });
+        }, (error) => {
+          console.log(error);
+        });
       },
-        (error) =>
-        {
+        (error) => {
           console.log(error);
           this.deleteProductDisabled = false;
         });
     }
-    else
-    {
+    else {
       super.getFormGroupErrors(this.deleteProductForm);
     }
   }
 
-  onViewSelectAllClick()
-  {
-    for (let propertyName of Object.keys(this.viewProductCheckBoxes))
-    {
+  onViewSelectAllClick() {
+    for (let propertyName of Object.keys(this.viewProductCheckBoxes)) {
       this.viewProductCheckBoxes[propertyName] = true;
     }
   }
 
-  onViewDeselectAllClick()
-  {
-    for (let propertyName of Object.keys(this.viewProductCheckBoxes))
-    {
+  onViewDeselectAllClick() {
+    for (let propertyName of Object.keys(this.viewProductCheckBoxes)) {
       this.viewProductCheckBoxes[propertyName] = false;
     }
   }
@@ -287,4 +252,5 @@ export class ProductsComponent extends InventoryComponentBase implements OnInit
     });
 
   }
+
 }
