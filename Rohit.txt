@@ -1,0 +1,138 @@
+--Script to create table
+
+--creating database
+Create Database Inventory
+Go
+
+--using the created database
+use Inventory
+Go
+
+--creating schema
+CREATE SCHEMA RMA
+Go
+
+--creating schema
+CREATE SCHEMA Prod
+Go
+
+--creating table for RawMaterial
+CREATE Table RMA.RawMaterial
+(
+--Developed by Rohit Kumar on 28/09/2019
+RawMaterialID varchar(40) CONSTRAINT RawMaterialPK PRIMARY KEY,
+RawMaterialName varchar(30) NOT NULL,
+RawMaterialCode varchar(5) NOT NULL CONSTRAINT RMCodeUnique UNIQUE,
+RawMaterialPrice decimal NOT NULL CONSTRAINT RMPriceNotNegative Check (RawMaterialPrice > 0),
+CreationDateTime datetime2,
+LastUpdateDateTime datetime2
+)
+
+create table RMA.supplierAddress
+(
+--Developed by Pushpraj kaushik on 28/09/2019
+ supplierAddressID varchar(40) primary key,
+ supplierID varchar(40) foreign key(supplierID) references RMA.supplier(supplierID) Not Null,
+ AddressLine1   varchar(255) NOT NULL ,
+ AddressLine2   varchar(255) NOT NULL ,
+ PinCode  char(6) NOT NULL unique,
+ City   varchar(50) NOT NULL unique,
+ [state] varchar(50) NOT NULL,
+)
+
+create table RMA.supplier
+(
+--Developed by Pushpraj kaushik on 28/09/2019
+ supplierID     varchar(40) primary key,
+ SupplierName   varchar(40) NOT NULL ,
+ SupplierMobile   char(10) NOT NULL ,
+ SupplierEmail  varchar(50) NOT NULL unique,
+ SupplierPassword   varchar(15) NOT NULL ,
+ creationDateTime   datetime,
+ lastModifiedDateTime datetime
+)
+
+Create Table RMA.Rawmaterialorder
+ (
+ --Developed by Ritwik Sinha on 28/09/2019
+ CreationDateTime          Datetime, 
+ LastmodifiedDateTime      datetime,
+ RawMaterialOrderID        varchar(40)     primary key,
+ RawMaterialOrderDate      datetime             not null ,
+ SupplierID                varchar(40) foreign key(SupplierID) references RMA.supplier(SupplierID)    not null ,
+ RawMaterialTotalPrice     decimal            constraint k_RM_price check (RawMaterialTotalPrice > 0),
+ RawMaterialTotalQuantity  decimal            constraint k_RM_quantity check (RawMaterialTotalQuantity > 0),	    
+ )
+
+ create table RMA.Rawmaterialorderdetails
+ (
+ --Developed by Ritwik Sinha on 28/09/2019
+ RawMaterialOrderDetailID varchar(40),
+ RawMaterialOrderID    varchar(40),foreign key (RawMaterialOrderID) references RMA.rawmaterialorder(RawMaterialOrderID), 
+ RawMaterialID          varchar(40),
+ RawMaterialUnitPrice    decimal,
+ RawMaterialQuantity     decimal,
+ RawMaterialTotalPrice   decimal
+ ) 
+
+create table Prod.ProductOrders(
+--Developed by Sai Jahnavi on 28/09/2019
+ProductOrderID   varchar(40) primary key,
+ProductOrderDate DateTime Not NUll, 
+LastModifiedDate DateTime  Not Null,
+DistributorID varchar(40), foreign key(DistributorID)  references Prod.Distributor(DistributorID),
+ProductOrderAmount decimal constraint Amount_constraint  check (ProductOrderAmount >0.0),
+PaymentStatus bit Not NuLL,
+TotalQuantity decimal constraint quantity_constraint check (TotalQuantity>0.0), 
+DistributorAddressID varchar(40) references Prod.DistributorAddress(DistributorAddressID) Not Null,
+)
+
+create table Prod.ProductOrderDetails(
+--Developed by Sai Jahnavi on 28/09/2019
+ProductOrderDetailID  varchar(40) primary key,
+ProductOrderID varchar(40) references Prod.ProductOrders(ProductOrderID) Not Null,
+ProductID varchar(40) references Prod.Product(ProductID) Not Null,
+DistributorID varchar(40) references Prod.Distributor(DistributorID) Not Null,
+ProductTotalPrice decimal constraint Price_constraint  check (ProductTotalPrice >0.0),
+ProductQuantity decimal constraint Prod_quantity_constraint check (ProductQuantity>0.0),
+ProductUnitPrice decimal constraint Unit_price_constraint check (ProductUnitPrice>0.0),
+)
+
+--creating table for Product
+CREATE Table Prod.Product
+(
+--Developed by Rohit Kumar on 28/09/2019
+ProductID varchar(40) CONSTRAINT ProductPK PRIMARY KEY,
+ProductName varchar(30) NOT NULL,
+ProductCode varchar(5) NOT NULL CONSTRAINT PCodeUnique UNIQUE,
+ProductPrice decimal NOT NULL CONSTRAINT PPriceNotNegative Check (ProductPrice > 0),
+ProductType varchar(12) NOT NULL CONSTRAINT PTypeIN Check (ProductType in('Mocktail','Soft Drink','Energy Drink','Juice','Tonic Water')),
+CreationDateTime datetime2,
+LastUpdateDateTime datetime2
+)
+Go
+
+create table Prod.Distributor
+(
+--Developed by Sowrasree Banerjee on 28/09/2019
+DistributorID varchar(40) constraint Distributor_pk primary key,
+DistributorName varchar(40) Not Null unique,
+DistributorMobile char(10)  Not Null unique,
+DistributorEmail varchar(30) not null unique,
+DistributorPassword varchar(15) not null unique,
+CreateDateTime dateTime Not Null,
+LastModifiedDateTime DateTime not Null,
+)
+
+create table Prod.DistributorAddress
+(
+--Developed by Sowrasree Banerjee on 28/09/2019
+DistributoraddressID varchar(40) constraint Distributoraddress_pk primary key,
+DistributorID varchar(40) foreign key (DistributorID) references Prod.Distributor(DistributorID) ,
+AddressLine1 varchar(30) not null unique,
+AddressLine2 varchar (30),
+Pincode char(6),
+City varchar(10),
+DistributorState varchar(10),
+)
+
