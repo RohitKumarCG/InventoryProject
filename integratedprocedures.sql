@@ -1,5 +1,5 @@
 --Integrated stored procedures 
---Developed by Team C on 2/10/19
+--Developed by Team D on 2/10/19
 
 
 
@@ -264,45 +264,10 @@ end
 
 
 
-
-
-
-
-exec GetProductByProductID '1002'
-exec GetProductByProductName 'MangoJuice'
-exec GetProductByProductCode 'MJ'
-exec GetProductsByProductType 'Juice'
-exec GetAllProducts
-exec UpdateProduct '1001','FruitJuice','FJ',20,'12-Oct-2019'
-
-select * from Prod.Product
-exec AddProduct '1002', 'Juice','MangoJuice', 'MJ', 20
-exec AddProduct '1001', 'Juice','FruitJuice', 'FJ', 25
-
-exec DeleteProduct '1002'
-
-exec GetAllRawMaterials
-
-exec GetRawMaterialByRawMaterialName 'Mango'
-
-exec GetRawMaterialByRawMaterialID '1101'
-
-exec GetRawMaterialByRawMaterialCode 'BA'
-
-exec AddRawMaterial '1104','Bananaa','BAA',20
-
-exec UpdateRawMaterial '1102', 'Banana', 'BA', 20, '12-Oct-2019'
-
-exec DeleteRawMaterial '1103'
-
 select * from RMA.RawMaterial
 
 SOURASREE
 
-
-
-drop table prod.Distributor
-go
 create table Prod.Distributor
 (DistributorID varchar(20) constraint Distributor_pk primary key,
 DistributorName varchar(40) Not Null unique,
@@ -1317,7 +1282,32 @@ GO
 
 
 
+exec GetProductByProductID '1002'
+exec GetProductByProductName 'MangoJuice'
+exec GetProductByProductCode 'MJ'
+exec GetProductsByProductType 'Juice'
+exec GetAllProducts
+exec UpdateProduct '1001','FruitJuice','FJ',20,'12-Oct-2019'
 
+select * from Prod.Product
+exec AddProduct '1002', 'Juice','MangoJuice', 'MJ', 20
+exec AddProduct '1001', 'Juice','FruitJuice', 'FJ', 25
+
+exec DeleteProduct '1002'
+
+exec GetAllRawMaterials
+
+exec GetRawMaterialByRawMaterialName 'Mango'
+
+exec GetRawMaterialByRawMaterialID '1101'
+
+exec GetRawMaterialByRawMaterialCode 'BA'
+
+exec AddRawMaterial '1104','Bananaa','BAA',20
+
+exec UpdateRawMaterial '1102', 'Banana', 'BA', 20, '12-Oct-2019'
+
+exec DeleteRawMaterial '1103'
 
 
 
