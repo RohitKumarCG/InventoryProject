@@ -1,0 +1,419 @@
+using System;
+using System.Collections.Generic;
+using Capgemini.Inventory.Entities;
+using Capgemini.Inventory.Helpers;
+using Capgemini.Inventory.Contracts.DALContracts;
+using System.Data.SqlClient;
+using System.Data;
+
+namespace Capgemini.Inventory.DataAccessLayer
+{
+	// Developed by Rohit Kumar (Group 4)
+	// Creation Date : 2019/09/22
+	// Last Modified Date : 2019/10/16
+	
+    /// <summary>
+    /// Contains data access layer methods for inserting, updating, deleting raw materials from RawMaterial database.
+    /// </summary>
+    public class RawMaterialDAL : RawMaterialDALBase, IDisposable
+    {
+        SqlConnection sqlConn = new SqlConnection(Properties.Settings.Default.dbConn);
+        public override bool AddRawMaterialDAL(RawMaterial newRawMaterial)
+        {
+            bool isAdded = false;
+            return isAdded;
+        }
+
+
+        /// <summary>
+        /// Gets all RawMaterials from the database and store in a list.
+        /// </summary>
+        /// <returns>Returns list of all RawMaterials.</returns>
+        public override List<RawMaterial> GetAllRawMaterialsDAL()
+        {
+            List<RawMaterial> rawMaterialsList = new List<RawMaterial>();
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand("select * from Team_D.RawMaterial", sqlConn);
+                sqlCommand.CommandType = CommandType.Text;
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                //
+                //
+                //
+                //
+                //(try to change this to datareader;)
+                //
+                //
+                //
+                //
+
+                sqlDataAdapter.SelectCommand = sqlCommand;
+
+                DataSet dtSet = new DataSet();
+                sqlDataAdapter.Fill(dtSet);
+                DataRow drow;
+                for (int i = 0; i < dtSet.Tables[0].Rows.Count; i++)
+                {
+                    drow = dtSet.Tables[0].Rows[i];
+                    RawMaterial rawMaterial = new RawMaterial();
+                    rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID"];
+                    rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime"];
+                    rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                    rawMaterial.RawMaterialName = (string)drow["RawMaterialName"];
+                    rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
+                    rawMaterial.RawMaterialPrice = (double)drow["RawMaterialUnitPrice"];
+                    rawMaterialsList.Add(rawMaterial);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return rawMaterialsList;
+        }
+
+        /// <summary>
+        /// Gets RawMaterial based on RawMaterialID.
+        /// </summary>
+        /// <param name="searchRawMaterialID">Represents RawMaterialID to search.</param>
+        /// <returns>Returns RawMaterial object.</returns>
+        public override RawMaterial GetRawMaterialByRawMaterialIDDAL(Guid searchRawMaterialID)
+        {
+            RawMaterial rawMaterial = new RawMaterial();
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand("select * from Team_D.RawMaterial where RawMaterialID = @rawmaterialid", sqlConn);
+                sqlCommand.Parameters.AddWithValue("@rawmaterialid", searchRawMaterialID);
+                sqlCommand.CommandType = CommandType.Text;
+                    
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                sqlDataAdapter.SelectCommand = sqlCommand;
+
+                DataSet dtSet = new DataSet();
+                sqlDataAdapter.Fill(dtSet);
+                DataRow drow;
+                drow = dtSet.Tables[0].Rows[0];
+
+                rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID "];
+                rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime "];
+                rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                rawMaterial.RawMaterialName = (string)drow["RawMaterialName "];
+                rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
+                rawMaterial.RawMaterialPrice = (double)drow["RawMaterialUnitPrice "];
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return rawMaterial;
+        }
+
+
+        /// <summary>
+        /// Gets RawMaterial based on RawMaterialName.
+        /// </summary>
+        /// <param name="RawMaterialName">Represents RawMaterialName to search.</param>
+        /// <returns>Returns RawMaterial object.</returns>
+        public override RawMaterial GetRawMaterialByRawMaterialNameDAL(string searchRawMaterialName)
+        {
+            RawMaterial rawMaterial = new RawMaterial();
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand("select * from Team_D.RawMaterial where RawMaterialName = @rawmaterialname", sqlConn);
+                sqlCommand.Parameters.AddWithValue("@rawmaterialname", searchRawMaterialName);
+                sqlCommand.CommandType = CommandType.Text;
+
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                sqlDataAdapter.SelectCommand = sqlCommand;
+
+                DataSet dtSet = new DataSet();
+                sqlDataAdapter.Fill(dtSet);
+                DataRow drow;
+                drow = dtSet.Tables[0].Rows[0];
+
+                rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID "];
+                rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime "];
+                rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                rawMaterial.RawMaterialName = (string)drow["RawMaterialName "];
+                rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
+                rawMaterial.RawMaterialPrice = (double)drow["RawMaterialUnitPrice "];
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return rawMaterial;
+        }
+
+
+        /// <summary>
+        /// Gets RawMaterial based on Code.
+        /// </summary>
+        /// <param name="RawMaterialCode">Represents RawMaterial's Code.</param>
+        /// <returns>Returns RawMaterial object.</returns>
+        public override RawMaterial GetRawMaterialByRawMaterialCodeDAL(string searchRawMaterialCode)
+        {
+            RawMaterial rawMaterial = new RawMaterial();
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand("select * from Team_D.RawMaterial where RawMaterialCode = @rawmaterialcode", sqlConn);
+                sqlCommand.Parameters.AddWithValue("@rawmaterialcode", searchRawMaterialCode);
+                sqlCommand.CommandType = CommandType.Text;
+
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                sqlDataAdapter.SelectCommand = sqlCommand;
+
+                DataSet dtSet = new DataSet();
+                sqlDataAdapter.Fill(dtSet);
+                DataRow drow;
+                drow = dtSet.Tables[0].Rows[0];
+
+                rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID"];
+                rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime"];
+                rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                rawMaterial.RawMaterialName = (string)drow["RawMaterialName"];
+                rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
+                rawMaterial.RawMaterialPrice = (double)drow["RawMaterialUnitPrice"];
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return rawMaterial;
+        }
+
+
+        /// <summary>
+        /// Updates RawMaterial based on RawMaterialID.
+        /// </summary>
+        /// <param name="updateRawMaterial">Represents RawMaterial details including RawMaterialID, RawMaterialName etc.</param>
+        /// <returns>Determinates whether the existing RawMaterial is updated.</returns>
+        public override bool UpdateRawMaterialDAL(RawMaterial updateRawMaterial)
+        {
+            bool isUpdated = false;
+            try
+            {
+                SqlCommand cmd = new SqlCommand("Team_D.UpdateRawMaterial", sqlConn);
+                SqlParameter p1 = new SqlParameter("@rawmaterialid", updateRawMaterial.RawMaterialID);
+                p1.DbType = DbType.Guid;
+                SqlParameter p2 = new SqlParameter("@rawmaterialname ", updateRawMaterial.RawMaterialName);
+                SqlParameter p3 = new SqlParameter("@rawmaterialcode ", updateRawMaterial.RawMaterialCode);
+                SqlParameter p4 = new SqlParameter("@rawmaterialunitprice ", updateRawMaterial.RawMaterialPrice);
+                SqlParameter p5 = new SqlParameter("@lastmodifieddatetime ", updateRawMaterial.LastModifiedDateTime);
+
+                cmd.Parameters.Add(p1);
+                cmd.Parameters.Add(p2);
+                cmd.Parameters.Add(p3);
+                cmd.Parameters.Add(p4);
+                cmd.Parameters.Add(p5);
+
+                cmd.CommandType = CommandType.StoredProcedure;
+                sqlConn.Open();
+                cmd.ExecuteNonQuery();
+                sqlConn.Close();
+                isUpdated = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return isUpdated;
+        }
+
+        /// <summary>
+        /// Deletes RawMaterial based on RawMaterialID.
+        /// </summary>
+        /// <param name="deleteRawMaterialID">Represents RawMaterialID to delete.</param>
+        /// <returns>Determinates whether the existing RawMaterial is deleted.</returns>
+        public override bool DeleteRawMaterialDAL(Guid deleteRawMaterialID)
+        {
+            bool isDeleted = false;
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand("delete from Team_D.RawMaterial where RawMaterialID  = @rawmaterialid", sqlConn);
+                sqlCommand.Parameters.AddWithValue("@rawmaterialid", deleteRawMaterialID);
+                sqlCommand.CommandType = CommandType.Text;
+
+                sqlConn.Open();
+                sqlCommand.ExecuteNonQuery();
+                sqlConn.Close();
+                isDeleted = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return isDeleted;
+        }
+
+        /// <summary>
+        /// Clears unmanaged resources such as db connections or file streams.
+        /// </summary>
+        public void Dispose()
+        {
+            //No unmanaged resources currently
+        }
+    }
+}
+
+/// <summary>
+/// Adds new RawMaterial to RawMaterials collection.
+/// </summary>
+/// <param name="newRawMaterial">Contains the RawMaterial details to be added.</param>
+/// <returns>Determinates whether the new RawMaterial is added.</returns>
+//public override bool AddRawMaterialDAL(RawMaterial newRawMaterial)
+//{
+//    bool RawMaterialAdded = false;
+//    try
+//    {
+//        newRawMaterial.RawMaterialID = Guid.NewGuid();
+//        newRawMaterial.CreationDateTime = DateTime.Now;
+//        newRawMaterial.LastModifiedDateTime = DateTime.Now;
+//        rawMaterialList.Add(newRawMaterial);
+//        RawMaterialAdded = true;
+//    }
+//    catch (Exception)
+//    {
+//        throw;
+//    }
+//    return RawMaterialAdded;
+//}
+
+
+/// <summary>
+/// Gets all RawMaterials from the collection.
+/// </summary>
+/// <returns>Returns list of all RawMaterials.</returns>
+//public override List<RawMaterial> GetAllRawMaterialsDAL()
+//{
+//    return rawMaterialList;
+//}
+
+
+/// <summary>
+/// Deletes RawMaterial based on RawMaterialID.
+/// </summary>
+/// <param name="deleteRawMaterialID">Represents RawMaterialID to delete.</param>
+/// <returns>Determinates whether the existing RawMaterial is updated.</returns>
+//public override bool DeleteRawMaterialDAL(Guid deleteRawMaterialID)
+//{
+//    bool RawMaterialDeleted = false;
+//    try
+//    {
+//        //Find RawMaterial based on searchRawMaterialID
+//        RawMaterial matchingRawMaterial = rawMaterialList.Find(
+//            (item) => { return item.RawMaterialID == deleteRawMaterialID; }
+//        );
+
+//        if (matchingRawMaterial != null)
+//        {
+//            //Delete RawMaterial from the collection
+//            rawMaterialList.Remove(matchingRawMaterial);
+//            RawMaterialDeleted = true;
+//        }
+//    }
+//    catch (Exception)
+//    {
+//        throw;
+//    }
+//    return RawMaterialDeleted;
+//}
+
+
+/// <summary>
+/// Updates RawMaterial based on RawMaterialID.
+/// </summary>
+/// <param name="updateRawMaterial">Represents RawMaterial details including RawMaterialID, RawMaterialName etc.</param>
+/// <returns>Determinates whether the existing RawMaterial is updated.</returns>
+//public override bool UpdateRawMaterialDAL(RawMaterial updateRawMaterial)
+//{
+//    bool RawMaterialUpdated = false;
+//    try
+//    {
+//        //Find RawMaterial based on RawMaterialID
+//        RawMaterial matchingRawMaterial = GetRawMaterialByRawMaterialIDDAL(updateRawMaterial.RawMaterialID);
+
+//        if (matchingRawMaterial != null)
+//        {
+//            //Update RawMaterial details
+//            ReflectionHelpers.CopyProperties(updateRawMaterial, matchingRawMaterial, new List<string>() { "RawMaterialName", "RawMaterialCode", "RawMaterialPrice" });
+//            matchingRawMaterial.LastModifiedDateTime = DateTime.Now;
+
+//            RawMaterialUpdated = true;
+//        }
+//    }
+//    catch (Exception)
+//    {
+//        throw;
+//    }
+//    return RawMaterialUpdated;
+//}
+
+
+/// <summary>
+/// Gets RawMaterial based on Code.
+/// </summary>
+/// <param name="RawMaterialCode">Represents RawMaterial's Code.</param>
+/// <returns>Returns RawMaterial object.</returns>
+//public override RawMaterial GetRawMaterialByRawMaterialCodeDAL(string searchRawMaterialCode)
+//{
+//    RawMaterial matchingRawMaterial = null;
+//    try
+//    {
+//        //Find RawMaterial based on Code
+//        matchingRawMaterial = rawMaterialList.Find(
+//            (item) => { return item.RawMaterialCode.Equals(searchRawMaterialCode); }
+//        );
+//    }
+//    catch (Exception)
+//    {
+//        throw;
+//    }
+//    return matchingRawMaterial;
+//}
+
+
+/// <summary>
+/// Gets RawMaterial based on RawMaterialName.
+/// </summary>
+/// <param name="RawMaterialName">Represents RawMaterialName to search.</param>
+/// <returns>Returns RawMaterial object.</returns>
+//public override RawMaterial GetRawMaterialByRawMaterialNameDAL(string searchRawMaterialName)
+//{
+//    RawMaterial matchingRawMaterial = null;
+//    try
+//    {
+//        //Find All RawMaterials based on RawMaterialName
+//        matchingRawMaterial = rawMaterialList.Find(
+//            (item) => { return item.RawMaterialName.Equals(searchRawMaterialName, StringComparison.OrdinalIgnoreCase); }
+//        );
+//    }
+//    catch (Exception)
+//    {
+//        throw;
+//    }
+//    return matchingRawMaterial;
+//}
+
+
+/// <summary>
+/// Gets RawMaterial based on RawMaterialID.
+/// </summary>
+/// <param name="searchRawMaterialID">Represents RawMaterialID to search.</param>
+/// <returns>Returns RawMaterial object.</returns>
+//public override RawMaterial GetRawMaterialByRawMaterialIDDAL(Guid searchRawMaterialID)
+//{
+//    RawMaterial matchingRawMaterial = null;
+//    try
+//    {
+//        //Find RawMaterial based on searchRawMaterialID
+//        matchingRawMaterial = rawMaterialList.Find(
+//            (item) => { return item.RawMaterialID == searchRawMaterialID; }
+//        );
+//    }
+//    catch (Exception)
+//    {
+//        throw;
+//    }
+//    return matchingRawMaterial;
+//}
