@@ -4,7 +4,7 @@
 use [13th Aug CLoud PT Immersive]
 Go
 
-alter procedure AddRawMaterial(@rawmaterialid varchar(36), @rawmaterialname varchar(30), @rawmaterialcode varchar(5), 
+alter procedure Team_D.AddRawMaterial(@rawmaterialid varchar(36), @rawmaterialname varchar(30), @rawmaterialcode varchar(5), 
 	@rawmaterialunitprice int)
 as
 --Developed by Rohit Kumar on 30/09/2019
@@ -26,7 +26,7 @@ begin
 end
 
 
-alter procedure UpdateRawMaterial(@rawmaterialid varchar(36), @rawmaterialname varchar(30), @rawmaterialcode varchar(5),
+alter procedure Team_D.UpdateRawMaterial(@rawmaterialid varchar(36), @rawmaterialname varchar(30), @rawmaterialcode varchar(5),
 	@rawmaterialunitprice int, @lastmodifieddatetime datetime)
 as
 --Developed by Rohit Kumar on 30/09/2019
@@ -57,7 +57,7 @@ begin
 end
 
 
-alter procedure DeleteRawMaterial(@rawmaterialid varchar(36))
+alter procedure Team_D.DeleteRawMaterial(@rawmaterialid varchar(36))
 as
 --Developed by Rohit Kumar on 30/09/2019
 --procedure to delete a raw material
@@ -72,7 +72,7 @@ begin
 end
 
 
-alter procedure GetAllRawMaterials
+alter procedure Team_D.GetAllRawMaterials
 as
 --Developed by Rohit Kumar on 30/09/2019
 --procedure to list all the raw materials
@@ -82,7 +82,7 @@ end
 
 
 
-alter procedure GetRawMaterialByRawMaterialName(@rawmaterialname varchar (40))
+alter procedure Team_D.GetRawMaterialByRawMaterialName(@rawmaterialname varchar (40))
 as
 --Developed by Rohit Kumar on 30/09/2019
 --procedure to search raw material by name
@@ -97,7 +97,7 @@ begin
 end
 
 
-alter procedure GetRawMaterialByRawMaterialID(@rawmaterialid varchar (36))
+alter procedure Team_D.GetRawMaterialByRawMaterialID(@rawmaterialid varchar (36))
 as
 --Developed by Rohit Kumar on 30/09/2019
 --procedure to search raw material by id
@@ -112,7 +112,7 @@ begin
 end
 
 
-alter procedure GetRawMaterialByRawMaterialCode(@rawmaterialcode varchar (5))
+alter procedure Team_D.GetRawMaterialByRawMaterialCode(@rawmaterialcode varchar (5))
 as
 --Developed by Rohit Kumar on 30/09/2019
 --procedure to search raw material by code
@@ -127,7 +127,7 @@ begin
 end
 
 
-alter procedure AddProduct(@productid varchar(36), @producttype varchar(20), @productname varchar(30), @productcode varchar(5), 
+alter procedure Team_D.AddProduct(@productid varchar(36), @producttype varchar(20), @productname varchar(30), @productcode varchar(5), 
 	@productunitprice int)
 as
 --Developed by Rohit Kumar on 30/09/2019
@@ -149,7 +149,7 @@ begin
 end
 
 
-alter procedure UpdateProduct(@productid varchar(36), @productname varchar(30), @productcode varchar(5),
+alter procedure Team_D.UpdateProduct(@productid varchar(36), @productname varchar(30), @productcode varchar(5),
 	@productunitprice int, @lastmodifieddatetime datetime)
 as
 --Developed by Rohit Kumar on 30/09/2019
@@ -180,7 +180,7 @@ begin
 end
 
 
-alter procedure DeleteProduct(@productid varchar(36))
+alter procedure Team_D.DeleteProduct(@productid varchar(36))
 as
 --Developed by Rohit Kumar on 30/09/2019
 --procedure to delete a product
@@ -195,7 +195,7 @@ begin
 end
 
 
-alter procedure GetAllProducts
+alter procedure Team_D.GetAllProducts
 as
 --Developed by Rohit Kumar on 30/09/2019
 --procedure to list all the products
@@ -204,7 +204,7 @@ begin
 end
 
 
-alter procedure GetProductByProductID(@productid varchar (36))
+alter procedure Team_D.GetProductByProductID(@productid varchar (36))
 as
 --Developed by Rohit Kumar on 30/09/2019
 --procedure to search product by ID
@@ -219,7 +219,7 @@ begin
 end
 
 
-alter procedure GetProductByProductName(@productname varchar (30))
+alter procedure Team_D.GetProductByProductName(@productname varchar (30))
 as
 --Developed by Rohit Kumar on 30/09/2019
 --procedure to search product by Name
@@ -234,7 +234,7 @@ begin
 end
 
 
-alter procedure GetProductByProductCode(@productcode varchar (5))
+alter procedure Team_D.GetProductByProductCode(@productcode varchar (5))
 as
 --Developed by Rohit Kumar on 30/09/2019
 --procedure to search product by Code
@@ -249,7 +249,7 @@ begin
 end
 
 
-alter procedure GetProductsByProductType(@producttype varchar (12))
+alter procedure Team_D.GetProductsByProductType(@producttype varchar (12))
 as
 --Developed by Rohit Kumar on 30/09/2019
 --procedure to search product by Code
