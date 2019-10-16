@@ -4,7 +4,7 @@
 use [13th Aug CLoud PT Immersive]
 Go
 
-alter procedure Team_D.AddRawMaterial(@rawmaterialid varchar(36), @rawmaterialname varchar(30), @rawmaterialcode varchar(5), 
+alter procedure Team_D.AddRawMaterial(@rawmaterialid uniqueidentifier, @rawmaterialname varchar(30), @rawmaterialcode varchar(5), 
 	@rawmaterialunitprice int)
 as
 --Developed by Rohit Kumar on 30/09/2019
@@ -26,7 +26,7 @@ begin
 end
 
 
-alter procedure Team_D.UpdateRawMaterial(@rawmaterialid varchar(36), @rawmaterialname varchar(30), @rawmaterialcode varchar(5),
+alter procedure Team_D.UpdateRawMaterial(@rawmaterialid uniqueidentifier, @rawmaterialname varchar(30), @rawmaterialcode varchar(5),
 	@rawmaterialunitprice int, @lastmodifieddatetime datetime)
 as
 --Developed by Rohit Kumar on 30/09/2019
@@ -57,7 +57,7 @@ begin
 end
 
 
-alter procedure Team_D.DeleteRawMaterial(@rawmaterialid varchar(36))
+alter procedure Team_D.DeleteRawMaterial(@rawmaterialid uniqueidentifier)
 as
 --Developed by Rohit Kumar on 30/09/2019
 --procedure to delete a raw material
@@ -97,7 +97,7 @@ begin
 end
 
 
-alter procedure Team_D.GetRawMaterialByRawMaterialID(@rawmaterialid varchar (36))
+alter procedure Team_D.GetRawMaterialByRawMaterialID(@rawmaterialid uniqueidentifier)
 as
 --Developed by Rohit Kumar on 30/09/2019
 --procedure to search raw material by id
@@ -127,7 +127,7 @@ begin
 end
 
 
-alter procedure Team_D.AddProduct(@productid varchar(36), @producttype varchar(20), @productname varchar(30), @productcode varchar(5), 
+alter procedure Team_D.AddProduct(@productid uniqueidentifier, @producttype varchar(20), @productname varchar(30), @productcode varchar(5), 
 	@productunitprice int)
 as
 --Developed by Rohit Kumar on 30/09/2019
@@ -149,7 +149,7 @@ begin
 end
 
 
-alter procedure Team_D.UpdateProduct(@productid varchar(36), @productname varchar(30), @productcode varchar(5),
+alter procedure Team_D.UpdateProduct(@productid uniqueidentifier, @productname varchar(30), @productcode varchar(5),
 	@productunitprice int, @lastmodifieddatetime datetime)
 as
 --Developed by Rohit Kumar on 30/09/2019
@@ -180,7 +180,7 @@ begin
 end
 
 
-alter procedure Team_D.DeleteProduct(@productid varchar(36))
+alter procedure Team_D.DeleteProduct(@productid uniqueidentifier)
 as
 --Developed by Rohit Kumar on 30/09/2019
 --procedure to delete a product
@@ -204,7 +204,7 @@ begin
 end
 
 
-alter procedure Team_D.GetProductByProductID(@productid varchar (36))
+alter procedure Team_D.GetProductByProductID(@productid uniqueidentifier)
 as
 --Developed by Rohit Kumar on 30/09/2019
 --procedure to search product by ID
