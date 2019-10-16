@@ -12,11 +12,11 @@ as
 begin
 	if @rawmaterialname = ''
 	throw 50001, 'Raw Material Name cannot be empty', 1
-	if exists (Select RawMaterialName from RMA.RawMaterial where RawMaterialName = @rawmaterialname)
+	if exists (Select RawMaterialName from Team_D.RawMaterial where RawMaterialName = @rawmaterialname)
 	throw 50002, 'Raw Material with same name already exists', 1
 	if @rawmaterialcode = ''
 	throw 50003, 'Raw Material Code cannot be empty', 1
-	if exists (Select RawMaterialCode from RMA.RawMaterial where RawMaterialCode = @rawmaterialcode)
+	if exists (Select RawMaterialCode from Team_D.RawMaterial where RawMaterialCode = @rawmaterialcode)
 	throw 50004, 'Raw Material with same code already exists', 1
 	if @rawmaterialunitprice <= 0
 	throw 50005, 'Raw material Price cannot be less than or equal to zero', 1
@@ -43,7 +43,7 @@ begin
 	if @rawmaterialunitprice <= 0
 	throw 50005, 'Raw material Price cannot be less than or equal to zero', 1
 	
-	if exists (select RawMaterialID from RMA.RawMaterial where RawMaterialID = @rawmaterialid)
+	if exists (select RawMaterialID from Team_D.RawMaterial where RawMaterialID = @rawmaterialid)
 		begin
 			update Team_D.RawMaterial
 			set	RawMaterialName = @rawmaterialname,
@@ -286,7 +286,7 @@ create procedure Team_D.AddDistributor
 		if @disPas=''
 		throw 50003, 'Distributor Password cannot be empty',1
 
-	insert into Prod.Distributor(DistributorID,DistributorName,DistributorMobile,DistributorEmail,DistributorPassword,CreateDateTime,LastModifiedDateTime )
+	insert into Team_D.Distributor(DistributorID,DistributorName,DistributorMobile,DistributorEmail,DistributorPassword,CreateDateTime,LastModifiedDateTime )
 	values (@disId,@disName,@disMob,@disEmail,@disPas,@creationDateTime,@lastModifiedDate)
 end
 
@@ -924,7 +924,7 @@ throw 500001,'Total quantity should be greater than or equal to zero',5
 if @distributorAddressID IS NULL OR @distributorAddressID =''
 throw 500001,'Invalid ProductOrderID',1
 
-insert into Prod.ProductOrders(ProductOrderID, ProductOrderDate,LastModifiedDate,DistributorID,ProductOrderAmount,PaymentStatus,TotalQuantity ,DistributorAddressID)
+insert into Team_D.ProductOrders(ProductOrderID, ProductOrderDate,LastModifiedDate,DistributorID,ProductOrderAmount,PaymentStatus,TotalQuantity ,DistributorAddressID)
 values (@ProductOrderID,GetDate(),GetDate(),@DistributorID,@ProductOrderAmount,@paymentStatus,@TotalQuantity,@distributorAddressID)
 end
 --PROCEDURE CREATED
@@ -937,7 +937,7 @@ create procedure GetAllProductOrders
 as 
 begin 
 	begin try 
-	select*from Prod.ProductOrders
+	select*from Team_D.ProductOrders
 	end try
 	begin catch
 		PRINT @@ERROR;
@@ -953,7 +953,7 @@ create procedure DeleteProductOrder(@ProductOrderID varchar(40) )
 as 
 begin
 	begin try
-		DELETE FROM Prod.ProductOrders where ProductOrderID=@ProductOrderID
+		DELETE FROM Team_D.ProductOrders where ProductOrderID=@ProductOrderID
 	end try
 	begin catch
 	PRINT @@ERROR;
@@ -969,7 +969,7 @@ alter procedure UpdateProductOrder(@ProductOrderID varchar(40),@ProductOrderAmou
 as 
 begin
 	begin try
-		UPDATE Prod.ProductOrders
+		UPDATE Team_D.ProductOrders
 		SET ProductOrderAmount=@ProductOrderAmount,PaymentStatus =@PaymentStatus, TotalQuantity= @TotalQuantity,DistributorAddressID = @DistributorAddressID
 		WHERE ProductOrderID=@ProductOrderID
 	end try
@@ -987,7 +987,7 @@ create procedure GetProductOrderbyProductOrderID(@ProductOrderID varchar(40))
 as 
 begin
 	begin try
-		SELECT* FROM Prod.ProductOrders where ProductOrderID=@ProductOrderID
+		SELECT* FROM Team_D.ProductOrders where ProductOrderID=@ProductOrderID
 	end try
 	begin catch
 	PRINT @@ERROR;
@@ -1003,7 +1003,7 @@ create procedure GetProductOrdersByOrderDate(@ProductOrderDate datetime)
 as 
 begin
 	begin try
-		SELECT * FROM Prod.ProductOrders where ProductOrderDate=@ProductOrderDate
+		SELECT * FROM Team_D.ProductOrders where ProductOrderDate=@ProductOrderDate
 	end try
 	begin catch
 	PRINT @@ERROR;
