@@ -1,0 +1,507 @@
+using System;
+using System.Collections.Generic;
+using Capgemini.Inventory.Contracts.DALContracts;
+using Capgemini.Inventory.Entities;
+using Capgemini.Inventory.Helpers;
+using System.Data.SqlClient;
+using System.Data;
+
+namespace Capgemini.Inventory.DataAccessLayer
+{
+	// Developed by Rohit Kumar (Group 4)
+	// Creation Date : 2019/09/22
+	// Last Modified Date : 2019/10/16
+	
+    /// <summary>
+    /// Contains data access layer methods for inserting, updating, deleting Products from Products database.
+    /// </summary>
+    public class ProductDAL : ProductDALBase, IDisposable
+    {
+        SqlConnection sqlConn = new SqlConnection(Properties.Settings.Default.dbConn);
+
+        /// <summary>
+        /// Adds new Product to Product database.
+        /// </summary>
+        /// <param name="newProduct">Contains the Product details to be added.</param>
+        /// <returns>Determinates whether the new Product is added.</returns>
+        public override bool AddProductDAL(Product newProduct)
+        {
+            bool isAdded = false;
+            try
+            {
+                newProduct.ProductID = Guid.NewGuid();
+                newProduct.CreationDateTime = DateTime.Now;
+                newProduct.LastModifiedDateTime = DateTime.Now;
+
+                SqlCommand sqlCommand = new SqlCommand("Team_D.AddProduct", sqlConn);
+                SqlParameter p1 = new SqlParameter("@productid", newProduct.ProductID);
+                p1.DbType = DbType.Guid;
+                SqlParameter p2 = new SqlParameter("@producttype", newProduct.ProductType);
+                SqlParameter p3 = new SqlParameter("@productname", newProduct.ProductName);
+                SqlParameter p4 = new SqlParameter("@productcode", newProduct.ProductCode);
+                SqlParameter p5 = new SqlParameter("@productunitprice", newProduct.ProductPrice);
+
+                List<SqlParameter> sqlParameters = new List<SqlParameter>();
+                sqlParameters.Add(p1);
+                sqlParameters.Add(p2);
+                sqlParameters.Add(p3);
+                sqlParameters.Add(p4);
+                sqlParameters.Add(p5);
+                sqlCommand.Parameters.AddRange(sqlParameters.ToArray());
+
+                sqlCommand.CommandType = CommandType.StoredProcedure;
+                sqlConn.Open();
+                sqlCommand.ExecuteNonQuery();
+                sqlConn.Close();
+
+                isAdded = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return isAdded;
+        }
+
+        /// <summary>
+        /// Gets all Products from the database.
+        /// </summary>
+        /// <returns>Returns list of all Products.</returns>
+        public override List<Product> GetAllProductsDAL()
+        {
+            List<Product> productsList = new List<Product>();
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand("select * from Team_D.Product", sqlConn);
+                sqlCommand.CommandType = CommandType.Text;
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                sqlDataAdapter.SelectCommand = sqlCommand;
+
+                DataSet dtSet = new DataSet();
+                sqlDataAdapter.Fill(dtSet);
+                DataRow drow;
+                for (int i = 0; i < dtSet.Tables[0].Rows.Count; i++)
+                {
+                    drow = dtSet.Tables[0].Rows[i];
+                    Product product = new Product();
+
+                    product.ProductID = (Guid)drow["ProductID"];
+                    product.CreationDateTime = (DateTime)drow["CreationDateTime"];
+                    product.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                    product.ProductName = (string)drow["ProductName"];
+                    product.ProductCode = (string)drow["ProductCode"];
+                    product.ProductPrice = (double)drow["ProductUnitPrice"];
+                    product.ProductType = (string)drow["ProductType"];
+                    productsList.Add(product);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return productsList;
+        }
+
+        /// <summary>
+        /// Gets Product based on ProductID.
+        /// </summary>
+        /// <param name="searchProductID">Represents ProductID to search.</param>
+        /// <returns>Returns Product object.</returns>
+        public override Product GetProductByProductIDDAL(Guid searchProductID)
+        {
+            Product product = new Product();
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand("select * from Team_D.Product  where ProductID = @productid", sqlConn);
+                sqlCommand.Parameters.AddWithValue("@productid", searchProductID);
+                sqlCommand.CommandType = CommandType.Text;
+
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                sqlDataAdapter.SelectCommand = sqlCommand;
+
+                DataSet dtSet = new DataSet();
+                sqlDataAdapter.Fill(dtSet);
+                DataRow drow;
+                drow = dtSet.Tables[0].Rows[0];
+
+                product.ProductID = (Guid)drow["ProductID"];
+                product.CreationDateTime = (DateTime)drow["CreationDateTime"];
+                product.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                product.ProductName = (string)drow["ProductName"];
+                product.ProductCode = (string)drow["ProductCode"];
+                product.ProductPrice = (double)drow["ProductUnitPrice"];
+                product.ProductType = (string)drow["ProductType"];
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return product;
+        }
+
+        /// <summary>
+        /// Gets Product based on ProductName.
+        /// </summary>
+        /// <param name="searchProductName">Represents ProductName to search.</param>
+        /// <returns>Returns Product object.</returns>
+        public override Product GetProductByProductNameDAL(string searchProductName)
+        {
+            Product product = new Product();
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand("select * from Team_D.Product  where ProductName = @productname", sqlConn);
+                sqlCommand.Parameters.AddWithValue("@productname", searchProductName);
+                sqlCommand.CommandType = CommandType.Text;
+
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                sqlDataAdapter.SelectCommand = sqlCommand;
+
+                DataSet dtSet = new DataSet();
+                sqlDataAdapter.Fill(dtSet);
+                DataRow drow;
+                drow = dtSet.Tables[0].Rows[0];
+
+                product.ProductID = (Guid)drow["ProductID"];
+                product.CreationDateTime = (DateTime)drow["CreationDateTime"];
+                product.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                product.ProductName = (string)drow["ProductName"];
+                product.ProductCode = (string)drow["ProductCode"];
+                product.ProductPrice = (double)drow["ProductUnitPrice"];
+                product.ProductType = (string)drow["ProductType"];
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return product;
+        }
+
+        /// <summary>
+        /// Gets Product based on ProductCode.
+        /// </summary>
+        /// <param name="searchProductCode">Represents ProductName to search.</param>
+        /// <returns>Returns Product object.</returns>
+        public override Product GetProductByProductCodeDAL(string searchProductCode)
+        {
+            Product product = new Product();
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand("select * from Team_D.Product  where ProductCode = @productcode", sqlConn);
+                sqlCommand.Parameters.AddWithValue("@productcode", searchProductCode);
+                sqlCommand.CommandType = CommandType.Text;
+
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                sqlDataAdapter.SelectCommand = sqlCommand;
+
+                DataSet dtSet = new DataSet();
+                sqlDataAdapter.Fill(dtSet);
+                DataRow drow;
+                drow = dtSet.Tables[0].Rows[0];
+
+                product.ProductID = (Guid)drow["ProductID"];
+                product.CreationDateTime = (DateTime)drow["CreationDateTime"];
+                product.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                product.ProductName = (string)drow["ProductName"];
+                product.ProductCode = (string)drow["ProductCode"];
+                product.ProductPrice = (double)drow["ProductUnitPrice"];
+                product.ProductType = (string)drow["ProductType"];
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return product;
+        }
+
+        /// <summary>
+        /// Gets Products based on ProductType.
+        /// </summary>
+        /// <param name="searchProductType">Represents ProductType to search.</param>
+        /// <returns>Returns list of Product objects.</returns>
+        public override List<Product> GetProductsByProductTypeDAL(string searchProductType)
+        {
+            List<Product> productsList = new List<Product>();
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand("select * from Team_D.Product where ProductType = @producttype", sqlConn);
+                sqlCommand.Parameters.AddWithValue("@producttype", searchProductType);
+                sqlCommand.CommandType = CommandType.Text;
+
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                sqlDataAdapter.SelectCommand = sqlCommand;
+
+                DataSet dtSet = new DataSet();
+                sqlDataAdapter.Fill(dtSet);
+                DataRow drow;
+                for (int i = 0; i < dtSet.Tables[0].Rows.Count; i++)
+                {
+                    drow = dtSet.Tables[0].Rows[i];
+                    Product product = new Product();
+
+                    product.ProductID = (Guid)drow["ProductID"];
+                    product.CreationDateTime = (DateTime)drow["CreationDateTime"];
+                    product.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                    product.ProductName = (string)drow["ProductName"];
+                    product.ProductCode = (string)drow["ProductCode"];
+                    product.ProductPrice = (double)drow["ProductUnitPrice"];
+                    product.ProductType = (string)drow["ProductType"];
+                    productsList.Add(product);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return productsList;
+        }
+
+        /// <summary>
+        /// Updates Product based on ProductID.
+        /// </summary>
+        /// <param name="updateProduct">Represents Product details including ProductID, ProductName etc.</param>
+        /// <returns>Determinates whether the existing Product is updated.</returns>
+        public override bool UpdateProductDAL(Product updateProduct)
+        {
+            bool isUpdated = false;
+            try
+            {
+                SqlCommand cmd = new SqlCommand("Team_D.UpdateProduct", sqlConn);
+                SqlParameter p1 = new SqlParameter("@productid", updateProduct.ProductID);
+                p1.DbType = DbType.Guid;
+                SqlParameter p2 = new SqlParameter("@productname", updateProduct.ProductName);
+                SqlParameter p3 = new SqlParameter("@productcode", updateProduct.ProductCode);
+                SqlParameter p4 = new SqlParameter("@productunitprice", updateProduct.ProductPrice);
+                SqlParameter p5 = new SqlParameter("@lastmodifieddatetime", updateProduct.LastModifiedDateTime);
+
+                cmd.Parameters.Add(p1);
+                cmd.Parameters.Add(p2);
+                cmd.Parameters.Add(p3);
+                cmd.Parameters.Add(p4);
+                cmd.Parameters.Add(p5);
+
+                cmd.CommandType = CommandType.StoredProcedure;
+                sqlConn.Open();
+                cmd.ExecuteNonQuery();
+                sqlConn.Close();
+                isUpdated = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return isUpdated;
+        }
+
+        /// <summary>
+        /// Deletes Product based on ProductID.
+        /// </summary>
+        /// <param name="deleteProductID">Represents ProductID to delete.</param>
+        /// <returns>Determinates whether the existing Product is deleted.</returns>
+        public override bool DeleteProductDAL(Guid deleteProductID)
+        {
+            bool isDeleted = false;
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand("delete from Team_D.Product where ProductID = @productid", sqlConn);
+                sqlCommand.Parameters.AddWithValue("@productid", deleteProductID);
+                sqlCommand.CommandType = CommandType.Text;
+
+                sqlConn.Open();
+                sqlCommand.ExecuteNonQuery();
+                sqlConn.Close();
+                isDeleted = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return isDeleted;
+        }
+
+        /// <summary>
+        /// Clears unmanaged resources such as db connections or file streams.
+        /// </summary>
+        public void Dispose()
+        {
+            //No unmanaged resources currently
+        }
+    }
+}
+
+/// <summary>
+/// Adds new Product to Products collection.
+/// </summary>
+/// <param name="newProduct">Contains the Product details to be added.</param>
+/// <returns>Determinates whether the new Product is added.</returns>
+//public override bool AddProductDAL(Product newProduct)
+//{
+//    bool ProductAdded = false;
+//    try
+//    {
+//        newProduct.ProductID = Guid.NewGuid();
+//        newProduct.CreationDateTime = DateTime.Now;
+//        newProduct.LastModifiedDateTime = DateTime.Now;
+//        productList.Add(newProduct);
+//        ProductAdded = true;
+//    }
+//    catch (Exception)
+//    {
+//        throw;
+//    }
+//    return ProductAdded;
+//}
+
+/// <summary>
+/// Gets all Products from the collection.
+/// </summary>
+/// <returns>Returns list of all Products.</returns>
+//public override List<Product> GetAllProductsDAL()
+//{
+//    return productList;
+//}
+
+/// <summary>
+/// Gets Product based on ProductID.
+/// </summary>
+/// <param name="searchProductID">Represents ProductID to search.</param>
+/// <returns>Returns Product object.</returns>
+//public override Product GetProductByProductIDDAL(Guid searchProductID)
+//{
+//    Product matchingProduct = null;
+//    try
+//    {
+//        //Find Product based on searchProductID
+//        matchingProduct = productList.Find(
+//            (item) => { return item.ProductID == searchProductID; }
+//        );
+//    }
+//    catch (Exception)
+//    {
+//        throw;
+//    }
+//    return matchingProduct;
+//}
+
+/// <summary>
+/// Gets Product based on ProductName.
+/// </summary>
+/// <param name="searchProductName">Represents ProductName to search.</param>
+/// <returns>Returns Product object.</returns>
+//public override Product GetProductByProductNameDAL(string searchProductName)
+//{
+//    Product matchingProduct = null;
+//    try
+//    {
+//        //Find All Products based on ProductName
+//        matchingProduct = productList.Find(
+//            (item) => { return item.ProductName.Equals(searchProductName, StringComparison.OrdinalIgnoreCase); }
+//        );
+//    }
+//    catch (Exception)
+//    {
+//        throw;
+//    }
+//    return matchingProduct;
+//}
+
+/// <summary>
+/// Gets Product based on ProductName.
+/// </summary>
+/// <param name="searchProductCode">Represents ProductName to search.</param>
+/// <returns>Returns Product object.</returns>
+//public override Product GetProductByProductCodeDAL(string searchProductCode)
+//{
+//    Product matchingProduct = null;
+//    try
+//    {
+//        //Find All Products based on ProductCode
+//        matchingProduct = productList.Find(
+//            (item) => { return item.ProductCode.Equals(searchProductCode, StringComparison.OrdinalIgnoreCase); }
+//        );
+//    }
+//    catch (Exception)
+//    {
+//        throw;
+//    }
+//    return matchingProduct;
+//}
+
+/// <summary>
+/// Gets Products based on ProductType.
+/// </summary>
+/// <param name="searchProductType">Represents ProductType to search.</param>
+/// <returns>Returns list of Product objects.</returns>
+//public override List<Product> GetProductsByProductTypeDAL(string searchProductType)
+//{
+//    List<Product> matchingProducts = new List<Product>();
+//    try
+//    {
+//        //Find All Distributors based on distributorName
+//        matchingProducts = productList.FindAll(
+//            (item) => { return item.ProductType.Equals(searchProductType, StringComparison.OrdinalIgnoreCase); }
+//        );
+//    }
+//    catch (Exception)
+//    {
+//        throw;
+//    }
+//    return matchingProducts;
+//}
+
+/// <summary>
+/// Updates Product based on ProductID.
+/// </summary>
+/// <param name="updateProduct">Represents Product details including ProductID, ProductName etc.</param>
+/// <returns>Determinates whether the existing Product is updated.</returns>
+//public override bool UpdateProductDAL(Product updateProduct)
+//{
+//    bool ProductUpdated = false;
+//    try
+//    {
+//        //Find Product based on ProductID
+//        Product matchingProduct = GetProductByProductIDDAL(updateProduct.ProductID);
+
+//        if (matchingProduct != null)
+//        {
+//            //Update Product details
+//            ReflectionHelpers.CopyProperties(updateProduct, matchingProduct, new List<string>() { "ProductName", "ProductCode", "ProductPrice" });
+//            matchingProduct.LastModifiedDateTime = DateTime.Now;
+
+//            ProductUpdated = true;
+//        }
+//    }
+//    catch (Exception)
+//    {
+//        throw;
+//    }
+//    return ProductUpdated;
+//}
+
+/// <summary>
+/// Deletes Product based on ProductID.
+/// </summary>
+/// <param name="deleteProductID">Represents ProductID to delete.</param>
+/// <returns>Determinates whether the existing Product is deleted.</returns>
+//public override bool DeleteProductDAL(Guid deleteProductID)
+//{
+//    bool ProductDeleted = false;
+//    try
+//    {
+//        //Find Product based on searchProductID
+//        Product matchingProduct = productList.Find(
+//            (item) => { return item.ProductID == deleteProductID; }
+//        );
+
+//        if (matchingProduct != null)
+//        {
+//            //Delete Product from the collection
+//            productList.Remove(matchingProduct);
+//            ProductDeleted = true;
+//        }
+//    }
+//    catch (Exception)
+//    {
+//        throw;
+//    }
+//    return ProductDeleted;
+//}
