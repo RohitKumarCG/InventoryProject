@@ -42,6 +42,8 @@ create table Team_D.supplierAddress
  PinCode  char(6) NOT NULL unique,
  City   varchar(50) NOT NULL unique,
  [state] varchar(50) NOT NULL,
+ creationDateTime   datetime,
+ lastModifiedDateTime datetime
 )
 
 Create Table Team_D.Rawmaterialorder
@@ -118,13 +120,16 @@ TotalQuantity decimal constraint quantity_constraint check (TotalQuantity>0.0),
 DistributorAddressID uniqueidentifier references Team_D.DistributorAddress(DistributorAddressID) Not Null,
 )
 
-create table Team_D.ProductOrderDetails(
+create table Team_D.ProductOrderDetails
+(
 --Developed by Sai Jahnavi on 28/09/2019
 ProductOrderDetailID  uniqueidentifier primary key,
 ProductOrderID uniqueidentifier references Team_D.ProductOrders(ProductOrderID) Not Null,
 ProductID uniqueidentifier references Team_D.Product(ProductID) Not Null,
-DistributorID uniqueidentifier references Team_D.Distributor(DistributorID) Not Null,
 ProductTotalPrice decimal constraint Price_constraint  check (ProductTotalPrice >0.0),
 ProductQuantity decimal constraint Prod_quantity_constraint check (ProductQuantity>0.0),
 ProductUnitPrice decimal constraint Unit_price_constraint check (ProductUnitPrice>0.0),
 )
+
+
+
