@@ -52,6 +52,7 @@ namespace Capgemini.Inventory.DataAccessLayer
                 DataSet dtSet = new DataSet();
                 sqlDataAdapter.Fill(dtSet);
                 DataRow drow;
+
                 for (int i = 0; i < dtSet.Tables[0].Rows.Count; i++)
                 {
                     drow = dtSet.Tables[0].Rows[i];
@@ -92,14 +93,18 @@ namespace Capgemini.Inventory.DataAccessLayer
                 DataSet dtSet = new DataSet();
                 sqlDataAdapter.Fill(dtSet);
                 DataRow drow;
-                drow = dtSet.Tables[0].Rows[0];
+		if (dtSet.Tables[0].Rows.Count > 0)
+		{
+		   drow = dtSet.Tables[0].Rows[0];
 
-                rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID "];
-                rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime "];
-                rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
-                rawMaterial.RawMaterialName = (string)drow["RawMaterialName "];
-                rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
-                rawMaterial.RawMaterialPrice = (double)drow["RawMaterialUnitPrice "];
+		   rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID "];
+		   rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime "];
+		   rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+		   rawMaterial.RawMaterialName = (string)drow["RawMaterialName "];
+		   rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
+		   rawMaterial.RawMaterialPrice = (double)drow["RawMaterialUnitPrice "];
+		}
+                
             }
             catch (Exception)
             {
@@ -129,14 +134,17 @@ namespace Capgemini.Inventory.DataAccessLayer
                 DataSet dtSet = new DataSet();
                 sqlDataAdapter.Fill(dtSet);
                 DataRow drow;
-                drow = dtSet.Tables[0].Rows[0];
+                if (dtSet.Tables[0].Rows.Count > 0)
+		{
+		   drow = dtSet.Tables[0].Rows[0];
 
-                rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID "];
-                rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime "];
-                rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
-                rawMaterial.RawMaterialName = (string)drow["RawMaterialName "];
-                rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
-                rawMaterial.RawMaterialPrice = (double)drow["RawMaterialUnitPrice "];
+		   rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID "];
+		   rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime "];
+		   rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+		   rawMaterial.RawMaterialName = (string)drow["RawMaterialName "];
+		   rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
+		   rawMaterial.RawMaterialPrice = (double)drow["RawMaterialUnitPrice "];
+		}
             }
             catch (Exception)
             {
@@ -166,14 +174,17 @@ namespace Capgemini.Inventory.DataAccessLayer
                 DataSet dtSet = new DataSet();
                 sqlDataAdapter.Fill(dtSet);
                 DataRow drow;
-                drow = dtSet.Tables[0].Rows[0];
+                if (dtSet.Tables[0].Rows.Count > 0)
+		{
+		   drow = dtSet.Tables[0].Rows[0];
 
-                rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID"];
-                rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime"];
-                rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
-                rawMaterial.RawMaterialName = (string)drow["RawMaterialName"];
-                rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
-                rawMaterial.RawMaterialPrice = (double)drow["RawMaterialUnitPrice"];
+		   rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID "];
+		   rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime "];
+		   rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+		   rawMaterial.RawMaterialName = (string)drow["RawMaterialName "];
+		   rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
+		   rawMaterial.RawMaterialPrice = (double)drow["RawMaterialUnitPrice "];
+		}
             }
             catch (Exception)
             {
