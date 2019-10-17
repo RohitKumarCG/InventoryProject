@@ -122,15 +122,18 @@ namespace Capgemini.Inventory.DataAccessLayer
                 DataSet dtSet = new DataSet();
                 sqlDataAdapter.Fill(dtSet);
                 DataRow drow;
-                drow = dtSet.Tables[0].Rows[0];
+		if (dtSet.Tables[0].Rows.Count > 0)
+		{
+                   drow = dtSet.Tables[0].Rows[0];
 
-                product.ProductID = (Guid)drow["ProductID"];
-                product.CreationDateTime = (DateTime)drow["CreationDateTime"];
-                product.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
-                product.ProductName = (string)drow["ProductName"];
-                product.ProductCode = (string)drow["ProductCode"];
-                product.ProductPrice = (double)drow["ProductUnitPrice"];
-                product.ProductType = (string)drow["ProductType"];
+                  product.ProductID = (Guid)drow["ProductID"];
+                  product.CreationDateTime = (DateTime)drow["CreationDateTime"];
+                  product.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                  product.ProductName = (string)drow["ProductName"];
+                  product.ProductCode = (string)drow["ProductCode"];
+                  product.ProductPrice = (double)drow["ProductUnitPrice"];
+                  product.ProductType = (string)drow["ProductType"];
+		}
             }
             catch (Exception)
             {
@@ -159,15 +162,18 @@ namespace Capgemini.Inventory.DataAccessLayer
                 DataSet dtSet = new DataSet();
                 sqlDataAdapter.Fill(dtSet);
                 DataRow drow;
-                drow = dtSet.Tables[0].Rows[0];
+                if (dtSet.Tables[0].Rows.Count > 0)
+		{
+                   drow = dtSet.Tables[0].Rows[0];
 
-                product.ProductID = (Guid)drow["ProductID"];
-                product.CreationDateTime = (DateTime)drow["CreationDateTime"];
-                product.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
-                product.ProductName = (string)drow["ProductName"];
-                product.ProductCode = (string)drow["ProductCode"];
-                product.ProductPrice = (double)drow["ProductUnitPrice"];
-                product.ProductType = (string)drow["ProductType"];
+                  product.ProductID = (Guid)drow["ProductID"];
+                  product.CreationDateTime = (DateTime)drow["CreationDateTime"];
+                  product.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                  product.ProductName = (string)drow["ProductName"];
+                  product.ProductCode = (string)drow["ProductCode"];
+                  product.ProductPrice = (double)drow["ProductUnitPrice"];
+                  product.ProductType = (string)drow["ProductType"];
+		}
             }
             catch (Exception)
             {
@@ -196,15 +202,18 @@ namespace Capgemini.Inventory.DataAccessLayer
                 DataSet dtSet = new DataSet();
                 sqlDataAdapter.Fill(dtSet);
                 DataRow drow;
-                drow = dtSet.Tables[0].Rows[0];
+                if (dtSet.Tables[0].Rows.Count > 0)
+		{
+                   drow = dtSet.Tables[0].Rows[0];
 
-                product.ProductID = (Guid)drow["ProductID"];
-                product.CreationDateTime = (DateTime)drow["CreationDateTime"];
-                product.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
-                product.ProductName = (string)drow["ProductName"];
-                product.ProductCode = (string)drow["ProductCode"];
-                product.ProductPrice = (double)drow["ProductUnitPrice"];
-                product.ProductType = (string)drow["ProductType"];
+                  product.ProductID = (Guid)drow["ProductID"];
+                  product.CreationDateTime = (DateTime)drow["CreationDateTime"];
+                  product.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                  product.ProductName = (string)drow["ProductName"];
+                  product.ProductCode = (string)drow["ProductCode"];
+                  product.ProductPrice = (double)drow["ProductUnitPrice"];
+                  product.ProductType = (string)drow["ProductType"];
+		}
             }
             catch (Exception)
             {
