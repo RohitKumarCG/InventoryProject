@@ -10,20 +10,66 @@ namespace Capgemini.Inventory.DataAccessLayer
 {
 	// Developed by Rohit Kumar (Group 4)
 	// Creation Date : 2019/09/22
-	// Last Modified Date : 2019/10/16
+	// Last Modified Date : 2019/10/01
 	
     /// <summary>
-    /// Contains data access layer methods for inserting, updating, deleting raw materials from RawMaterial database.
+    /// Contains data access layer methods for inserting, updating, deleting raw materials from RawMaterial collection.
     /// </summary>
     public class RawMaterialDAL : RawMaterialDALBase, IDisposable
     {
-        SqlConnection sqlConn = new SqlConnection(Properties.Settings.Default.dbConn);
+        //Create SqlConnection object
+        SqlConnection sqlConn = new SqlConnection(Properties.Settings.Default.dbCon);
+        
+
+
+        /// <summary>
+        /// Adds new RawMaterial to RawMaterial database.
+        /// </summary>
+        /// <param name="newRawMaterial">Contains the RawMaterial details to be added.</param>
+        /// <returns>Determinates whether the new RawMaterial is added.</returns>
         public override bool AddRawMaterialDAL(RawMaterial newRawMaterial)
         {
             bool isAdded = false;
+            try
+            {
+                newRawMaterial.RawMaterialID = Guid.NewGuid();
+                newRawMaterial.CreationDateTime = DateTime.Now;
+                newRawMaterial.LastModifiedDateTime = DateTime.Now;
+
+                //Create SqlCommand object
+                SqlCommand sqlCommand = new SqlCommand($"Team_D.AddRawMaterial", sqlConn);
+                
+                //Create SqlParameters
+                SqlParameter p1 = new SqlParameter("@rawmaterialid", newRawMaterial.RawMaterialID);
+                p1.DbType = DbType.Guid;
+                SqlParameter p2 = new SqlParameter("@rawmaterialname", newRawMaterial.RawMaterialName);
+                SqlParameter p3 = new SqlParameter("@rawmaterialcode", newRawMaterial.RawMaterialCode);
+                SqlParameter p4 = new SqlParameter("@rawmaterialunitprice", newRawMaterial.RawMaterialPrice);
+                SqlParameter p5 = new SqlParameter("@creationdatetime", newRawMaterial.CreationDateTime);
+                SqlParameter p6 = new SqlParameter("@lastmodifiedatetime", newRawMaterial.LastModifiedDateTime);
+
+                //Createa list to add all SqlParameters
+                List<SqlParameter> sqlParameters = new List<SqlParameter>();
+                sqlParameters.Add(p1);
+                sqlParameters.Add(p2);
+                sqlParameters.Add(p3);
+                sqlParameters.Add(p4);
+                sqlParameters.Add(p5);
+                sqlParameters.Add(p6);
+                sqlCommand.Parameters.AddRange(sqlParameters.ToArray());
+
+                sqlCommand.CommandType = CommandType.StoredProcedure;
+                sqlConn.Open();
+                sqlCommand.ExecuteNonQuery();
+                sqlConn.Close();
+                isAdded = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
             return isAdded;
         }
-
 
         /// <summary>
         /// Gets all RawMaterials from the database and store in a list.
@@ -34,7 +80,7 @@ namespace Capgemini.Inventory.DataAccessLayer
             List<RawMaterial> rawMaterialsList = new List<RawMaterial>();
             try
             {
-                SqlCommand sqlCommand = new SqlCommand("select * from Team_D.RawMaterial", sqlConn);
+                SqlCommand sqlCommand = new SqlCommand("select * from [13th Aug CLoud PT Immersive].Team_D.RawMaterial", sqlConn);
                 sqlCommand.CommandType = CommandType.Text;
                 SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
                 //
@@ -52,7 +98,6 @@ namespace Capgemini.Inventory.DataAccessLayer
                 DataSet dtSet = new DataSet();
                 sqlDataAdapter.Fill(dtSet);
                 DataRow drow;
-
                 for (int i = 0; i < dtSet.Tables[0].Rows.Count; i++)
                 {
                     drow = dtSet.Tables[0].Rows[i];
@@ -62,7 +107,7 @@ namespace Capgemini.Inventory.DataAccessLayer
                     rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
                     rawMaterial.RawMaterialName = (string)drow["RawMaterialName"];
                     rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
-                    rawMaterial.RawMaterialPrice = (double)drow["RawMaterialUnitPrice"];
+                    rawMaterial.RawMaterialPrice = Convert.ToDouble(drow["RawMaterialUnitPrice"]);
                     rawMaterialsList.Add(rawMaterial);
                 }
             }
@@ -86,25 +131,32 @@ namespace Capgemini.Inventory.DataAccessLayer
                 SqlCommand sqlCommand = new SqlCommand("select * from Team_D.RawMaterial where RawMaterialID = @rawmaterialid", sqlConn);
                 sqlCommand.Parameters.AddWithValue("@rawmaterialid", searchRawMaterialID);
                 sqlCommand.CommandType = CommandType.Text;
-                    
+
                 SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
                 sqlDataAdapter.SelectCommand = sqlCommand;
 
                 DataSet dtSet = new DataSet();
                 sqlDataAdapter.Fill(dtSet);
                 DataRow drow;
-		if (dtSet.Tables[0].Rows.Count > 0)
-		{
-		   drow = dtSet.Tables[0].Rows[0];
+                if (dtSet.Tables[0].Rows.Count > 0)
+                {
+                    drow = dtSet.Tables[0].Rows[0];
 
-		   rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID "];
-		   rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime "];
-		   rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
-		   rawMaterial.RawMaterialName = (string)drow["RawMaterialName "];
-		   rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
-		   rawMaterial.RawMaterialPrice = (double)drow["RawMaterialUnitPrice "];
-		}
-                
+                    rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID"];
+                    rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime"];
+                    rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                    rawMaterial.RawMaterialName = (string)drow["RawMaterialName"];
+                    rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
+                    rawMaterial.RawMaterialPrice = Convert.ToDouble(drow["RawMaterialUnitPrice"]);
+                }
+                //drow = dtSet.Tables[0].Rows[0];
+
+                //rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID "];
+                //rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime "];
+                //rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                //rawMaterial.RawMaterialName = (string)drow["RawMaterialName "];
+                //rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
+                //rawMaterial.RawMaterialPrice = (double)drow["RawMaterialUnitPrice "];
             }
             catch (Exception)
             {
@@ -112,7 +164,6 @@ namespace Capgemini.Inventory.DataAccessLayer
             }
             return rawMaterial;
         }
-
 
         /// <summary>
         /// Gets RawMaterial based on RawMaterialName.
@@ -135,16 +186,24 @@ namespace Capgemini.Inventory.DataAccessLayer
                 sqlDataAdapter.Fill(dtSet);
                 DataRow drow;
                 if (dtSet.Tables[0].Rows.Count > 0)
-		{
-		   drow = dtSet.Tables[0].Rows[0];
+                {
+                    drow = dtSet.Tables[0].Rows[0];
 
-		   rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID "];
-		   rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime "];
-		   rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
-		   rawMaterial.RawMaterialName = (string)drow["RawMaterialName "];
-		   rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
-		   rawMaterial.RawMaterialPrice = (double)drow["RawMaterialUnitPrice "];
-		}
+                    rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID"];
+                    rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime"];
+                    rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                    rawMaterial.RawMaterialName = (string)drow["RawMaterialName"];
+                    rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
+                    rawMaterial.RawMaterialPrice = Convert.ToDouble(drow["RawMaterialUnitPrice"]);
+                }
+                //drow = dtSet.Tables[0].Rows[0];
+
+                //rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID "];
+                //rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime "];
+                //rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                //rawMaterial.RawMaterialName = (string)drow["RawMaterialName "];
+                //rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
+                //rawMaterial.RawMaterialPrice = (double)drow["RawMaterialUnitPrice "];
             }
             catch (Exception)
             {
@@ -152,7 +211,6 @@ namespace Capgemini.Inventory.DataAccessLayer
             }
             return rawMaterial;
         }
-
 
         /// <summary>
         /// Gets RawMaterial based on Code.
@@ -175,16 +233,24 @@ namespace Capgemini.Inventory.DataAccessLayer
                 sqlDataAdapter.Fill(dtSet);
                 DataRow drow;
                 if (dtSet.Tables[0].Rows.Count > 0)
-		{
-		   drow = dtSet.Tables[0].Rows[0];
+                {
+                    drow = dtSet.Tables[0].Rows[0];
 
-		   rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID "];
-		   rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime "];
-		   rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
-		   rawMaterial.RawMaterialName = (string)drow["RawMaterialName "];
-		   rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
-		   rawMaterial.RawMaterialPrice = (double)drow["RawMaterialUnitPrice "];
-		}
+                    rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID"];
+                    rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime"];
+                    rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                    rawMaterial.RawMaterialName = (string)drow["RawMaterialName"];
+                    rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
+                    rawMaterial.RawMaterialPrice = Convert.ToDouble(drow["RawMaterialUnitPrice"]);
+                }
+                //drow = dtSet.Tables[0].Rows[0];
+
+                //rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID"];
+                //rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime"];
+                //rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                //rawMaterial.RawMaterialName = (string)drow["RawMaterialName"];
+                //rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
+                //rawMaterial.RawMaterialPrice = (double)drow["RawMaterialUnitPrice"];
             }
             catch (Exception)
             {
@@ -202,6 +268,7 @@ namespace Capgemini.Inventory.DataAccessLayer
         public override bool UpdateRawMaterialDAL(RawMaterial updateRawMaterial)
         {
             bool isUpdated = false;
+            updateRawMaterial.LastModifiedDateTime = DateTime.Now;
             try
             {
                 SqlCommand cmd = new SqlCommand("Team_D.UpdateRawMaterial", sqlConn);
@@ -267,6 +334,7 @@ namespace Capgemini.Inventory.DataAccessLayer
     }
 }
 
+
 /// <summary>
 /// Adds new RawMaterial to RawMaterials collection.
 /// </summary>
@@ -274,22 +342,21 @@ namespace Capgemini.Inventory.DataAccessLayer
 /// <returns>Determinates whether the new RawMaterial is added.</returns>
 //public override bool AddRawMaterialDAL(RawMaterial newRawMaterial)
 //{
-//    bool RawMaterialAdded = false;
-//    try
-//    {
-//        newRawMaterial.RawMaterialID = Guid.NewGuid();
-//        newRawMaterial.CreationDateTime = DateTime.Now;
-//        newRawMaterial.LastModifiedDateTime = DateTime.Now;
-//        rawMaterialList.Add(newRawMaterial);
-//        RawMaterialAdded = true;
-//    }
-//    catch (Exception)
-//    {
-//        throw;
-//    }
-//    return RawMaterialAdded;
+//bool RawMaterialAdded = false;
+//try
+//{
+//    newRawMaterial.RawMaterialID = Guid.NewGuid();
+//    newRawMaterial.CreationDateTime = DateTime.Now;
+//    newRawMaterial.LastModifiedDateTime = DateTime.Now;
+//    rawMaterialList.Add(newRawMaterial);
+//    RawMaterialAdded = true;
 //}
-
+//catch (Exception)
+//{
+//    throw;
+//}
+//return RawMaterialAdded;
+//}
 
 /// <summary>
 /// Gets all RawMaterials from the collection.
@@ -300,6 +367,100 @@ namespace Capgemini.Inventory.DataAccessLayer
 //    return rawMaterialList;
 //}
 
+/// <summary>
+/// Gets RawMaterial based on RawMaterialID.
+/// </summary>
+/// <param name="searchRawMaterialID">Represents RawMaterialID to search.</param>
+/// <returns>Returns RawMaterial object.</returns>
+//public override RawMaterial GetRawMaterialByRawMaterialIDDAL(Guid searchRawMaterialID)
+//{
+//    RawMaterial matchingRawMaterial = null;
+//    try
+//    {
+//        //Find RawMaterial based on searchRawMaterialID
+//        matchingRawMaterial = rawMaterialList.Find(
+//            (item) => { return item.RawMaterialID == searchRawMaterialID; }
+//        );
+//    }
+//    catch (Exception)
+//    {
+//        throw;
+//    }
+//    return matchingRawMaterial;
+//}
+
+/// <summary>
+/// Gets RawMaterial based on RawMaterialName.
+/// </summary>
+/// <param name="RawMaterialName">Represents RawMaterialName to search.</param>
+/// <returns>Returns RawMaterial object.</returns>
+//public override RawMaterial GetRawMaterialByRawMaterialNameDAL(string searchRawMaterialName)
+//{
+//    RawMaterial matchingRawMaterial = null;
+//    try
+//    {
+//        //Find All RawMaterials based on RawMaterialName
+//        matchingRawMaterial = rawMaterialList.Find(
+//            (item) => { return item.RawMaterialName.Equals(searchRawMaterialName, StringComparison.OrdinalIgnoreCase); }
+//        );
+//    }
+//    catch (Exception)
+//    {
+//        throw;
+//    }
+//    return matchingRawMaterial;
+//}
+
+/// <summary>
+/// Gets RawMaterial based on Code.
+/// </summary>
+/// <param name="RawMaterialCode">Represents RawMaterial's Code.</param>
+/// <returns>Returns RawMaterial object.</returns>
+//public override RawMaterial GetRawMaterialByRawMaterialCodeDAL(string searchRawMaterialCode)
+//{
+//    RawMaterial matchingRawMaterial = null;
+//    try
+//    {
+//        //Find RawMaterial based on Code
+//        matchingRawMaterial = rawMaterialList.Find(
+//            (item) => { return item.RawMaterialCode.Equals(searchRawMaterialCode); }
+//        );
+//    }
+//    catch (Exception)
+//    {
+//        throw;
+//    }
+//    return matchingRawMaterial;
+//}
+
+/// <summary>
+/// Updates RawMaterial based on RawMaterialID.
+/// </summary>
+/// <param name="updateRawMaterial">Represents RawMaterial details including RawMaterialID, RawMaterialName etc.</param>
+/// <returns>Determinates whether the existing RawMaterial is updated.</returns>
+//public override bool UpdateRawMaterialDAL(RawMaterial updateRawMaterial)
+//{
+//    bool RawMaterialUpdated = false;
+//    try
+//    {
+//        //Find RawMaterial based on RawMaterialID
+//        RawMaterial matchingRawMaterial = GetRawMaterialByRawMaterialIDDAL(updateRawMaterial.RawMaterialID);
+
+//        if (matchingRawMaterial != null)
+//        {
+//            //Update RawMaterial details
+//            ReflectionHelpers.CopyProperties(updateRawMaterial, matchingRawMaterial, new List<string>() { "RawMaterialName", "RawMaterialCode", "RawMaterialPrice" });
+//            matchingRawMaterial.LastModifiedDateTime = DateTime.Now;
+
+//            RawMaterialUpdated = true;
+//        }
+//    }
+//    catch (Exception)
+//    {
+//        throw;
+//    }
+//    return RawMaterialUpdated;
+//}
 
 /// <summary>
 /// Deletes RawMaterial based on RawMaterialID.
@@ -331,100 +492,3 @@ namespace Capgemini.Inventory.DataAccessLayer
 //}
 
 
-/// <summary>
-/// Updates RawMaterial based on RawMaterialID.
-/// </summary>
-/// <param name="updateRawMaterial">Represents RawMaterial details including RawMaterialID, RawMaterialName etc.</param>
-/// <returns>Determinates whether the existing RawMaterial is updated.</returns>
-//public override bool UpdateRawMaterialDAL(RawMaterial updateRawMaterial)
-//{
-//    bool RawMaterialUpdated = false;
-//    try
-//    {
-//        //Find RawMaterial based on RawMaterialID
-//        RawMaterial matchingRawMaterial = GetRawMaterialByRawMaterialIDDAL(updateRawMaterial.RawMaterialID);
-
-//        if (matchingRawMaterial != null)
-//        {
-//            //Update RawMaterial details
-//            ReflectionHelpers.CopyProperties(updateRawMaterial, matchingRawMaterial, new List<string>() { "RawMaterialName", "RawMaterialCode", "RawMaterialPrice" });
-//            matchingRawMaterial.LastModifiedDateTime = DateTime.Now;
-
-//            RawMaterialUpdated = true;
-//        }
-//    }
-//    catch (Exception)
-//    {
-//        throw;
-//    }
-//    return RawMaterialUpdated;
-//}
-
-
-/// <summary>
-/// Gets RawMaterial based on Code.
-/// </summary>
-/// <param name="RawMaterialCode">Represents RawMaterial's Code.</param>
-/// <returns>Returns RawMaterial object.</returns>
-//public override RawMaterial GetRawMaterialByRawMaterialCodeDAL(string searchRawMaterialCode)
-//{
-//    RawMaterial matchingRawMaterial = null;
-//    try
-//    {
-//        //Find RawMaterial based on Code
-//        matchingRawMaterial = rawMaterialList.Find(
-//            (item) => { return item.RawMaterialCode.Equals(searchRawMaterialCode); }
-//        );
-//    }
-//    catch (Exception)
-//    {
-//        throw;
-//    }
-//    return matchingRawMaterial;
-//}
-
-
-/// <summary>
-/// Gets RawMaterial based on RawMaterialName.
-/// </summary>
-/// <param name="RawMaterialName">Represents RawMaterialName to search.</param>
-/// <returns>Returns RawMaterial object.</returns>
-//public override RawMaterial GetRawMaterialByRawMaterialNameDAL(string searchRawMaterialName)
-//{
-//    RawMaterial matchingRawMaterial = null;
-//    try
-//    {
-//        //Find All RawMaterials based on RawMaterialName
-//        matchingRawMaterial = rawMaterialList.Find(
-//            (item) => { return item.RawMaterialName.Equals(searchRawMaterialName, StringComparison.OrdinalIgnoreCase); }
-//        );
-//    }
-//    catch (Exception)
-//    {
-//        throw;
-//    }
-//    return matchingRawMaterial;
-//}
-
-
-/// <summary>
-/// Gets RawMaterial based on RawMaterialID.
-/// </summary>
-/// <param name="searchRawMaterialID">Represents RawMaterialID to search.</param>
-/// <returns>Returns RawMaterial object.</returns>
-//public override RawMaterial GetRawMaterialByRawMaterialIDDAL(Guid searchRawMaterialID)
-//{
-//    RawMaterial matchingRawMaterial = null;
-//    try
-//    {
-//        //Find RawMaterial based on searchRawMaterialID
-//        matchingRawMaterial = rawMaterialList.Find(
-//            (item) => { return item.RawMaterialID == searchRawMaterialID; }
-//        );
-//    }
-//    catch (Exception)
-//    {
-//        throw;
-//    }
-//    return matchingRawMaterial;
-//}
