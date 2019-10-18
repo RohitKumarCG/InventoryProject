@@ -1,0 +1,47 @@
+    <Grid Background="PeachPuff">
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Background="Linen" Header="Raw Material">
+                    <MenuItem Header="Add New Raw Material"/>
+                    <MenuItem Header="Manage Raw Materials"/>
+                </MenuItem>
+                <MenuItem Background="Linen" Header="Product">
+                    <MenuItem Header="Add New Product" Click="MenuItem_Click"/>
+                    <MenuItem Header="Manage Products"/>
+                </MenuItem>
+                <MenuItem Background="Linen" Header="Order">
+                    <MenuItem Header="New Order"/>
+                    <MenuItem Header="Delete Order"/>
+                </MenuItem>
+            </Menu>
+            <StackPanel></StackPanel>
+        </DockPanel>
+    </Grid>    
+    
+    
+    
+    
+    <Grid Background="PeachPuff">
+        
+        <Label Content="Product Name *" HorizontalAlignment="Left" Height="26" Margin="70,50,0,0" VerticalAlignment="Top" Width="125"/>
+        <Label Content="Product Code *" HorizontalAlignment="Left" Height="26" Margin="70,125,0,0" VerticalAlignment="Top" Width="125"/>
+        <Label Content="Unit Price *" HorizontalAlignment="Left" Height="26" Margin="70,200,0,0" VerticalAlignment="Top" Width="125"/>
+        <Label Content="Select Category" HorizontalAlignment="Left" Height="26" Margin="70,275,0,0" VerticalAlignment="Top" Width="125"/>
+        
+        <ComboBox HorizontalAlignment="Left" Margin="250,275,0,0" VerticalAlignment="Top" Width="150">
+            <ComboBoxItem Content="Juice" IsSelected="True" HorizontalAlignment="Left" Width="149"/>
+            <ComboBoxItem Content="Energy Drink" HorizontalAlignment="Left" Width="149"/>
+            <ComboBoxItem Content="Mocktail" HorizontalAlignment="Left" Width="149"/>
+            <ComboBoxItem Content="Tonic Water" HorizontalAlignment="Left" Width="149"/>
+            <ComboBoxItem Content="Soft Drink" HorizontalAlignment="Left" Width="149"/>
+        </ComboBox>
+        
+        <TextBox HorizontalAlignment="Left" Height="26" Margin="250,50,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="250"/>
+        <TextBox HorizontalAlignment="Left" Height="26" Margin="250,125,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="250"/>
+        <TextBox HorizontalAlignment="Left" Height="26" Margin="250,200,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="250"/>
+        
+        <Border BorderBrush="RosyBrown" CornerRadius="8" BorderThickness="1" HorizontalAlignment="Left" Height="305" VerticalAlignment="Top" Width="516" Margin="40,20,0,0"/>
+        
+        <Button Content="Add Product" HorizontalAlignment="Left" Height="36" Margin="635,274,0,0" VerticalAlignment="Top" Width="110"/>
+
+    </Grid>
