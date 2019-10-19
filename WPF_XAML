@@ -49,3 +49,47 @@
 
 
 
+
+
+    <Window.Resources>
+        <Style x:Key="MyTextBlockStyle">
+            <Setter Property="TextBlock.FontSize" Value="22px"></Setter>
+            <Setter Property="TextBlock.HorizontalAlignment" Value="Right"></Setter>
+            <Setter Property="TextBlock.VerticalAlignment" Value="Center"></Setter>
+            <Setter Property="TextBlock.Foreground" Value="DarkKhaki"></Setter>
+        </Style>
+        <Style x:Key="MyTextBoxStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="FontSize" Value="22px"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            <Setter Property="Margin" Value="10"></Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30*"></ColumnDefinition>
+            <ColumnDefinition Width="70*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="Customer Name" Grid.Row="0" Grid.Column="0" Style ="{StaticResource MyTextBlockStyle}" ></TextBlock>
+        <TextBlock Text="Mobile" Grid.Row="1" Grid.Column="0" Style ="{StaticResource MyTextBlockStyle}"  ></TextBlock>
+        <TextBlock Text="Email" Grid.Row="2" Grid.Column="0" Style ="{StaticResource MyTextBlockStyle}"  ></TextBlock>
+
+        <TextBox Grid.Row="0" Grid.Column="1" Width="300px" Style ="{StaticResource MyTextBoxStyle}" Name="txtCustomerName"></TextBox>
+        <TextBox Grid.Row="1" Grid.Column="1" Width="250px" Style ="{StaticResource MyTextBoxStyle}" Name="txtMobile"></TextBox>
+        <TextBox Grid.Row="2" Grid.Column="2" Width="350px" Style ="{StaticResource MyTextBoxStyle}" Name="txtEmail"></TextBox>
+
+        <Button Grid.Row="4" Grid.Column="0" FontSize="15px" HorizontalAlignment="Center"
+                   VerticalAlignment="Center" Foreground="Coral"  Width="100px" Margin="10" Name="btnLoad" >Load</Button>
+        <Button Grid.Row="4" Grid.Column="1" FontSize="15px" HorizontalAlignment="Center"
+                   VerticalAlignment="Center" Foreground="Coral"  Width="100px" Margin="10" Name="btnSave" Click="BtnSave_Click" >Save</Button>
+        
+    </Grid>
+
