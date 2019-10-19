@@ -10,7 +10,7 @@ namespace Capgemini.Inventory.DataAccessLayer
 {
 	// Developed by Rohit Kumar (Group 4)
 	// Creation Date : 2019/09/22
-	// Last Modified Date : 2019/10/01
+	// Last Modified Date : 2019/10/16
 	
     /// <summary>
     /// Contains data access layer methods for inserting, updating, deleting raw materials from RawMaterial collection.
@@ -20,8 +20,6 @@ namespace Capgemini.Inventory.DataAccessLayer
         //Create SqlConnection object
         SqlConnection sqlConn = new SqlConnection(Properties.Settings.Default.dbCon);
         
-
-
         /// <summary>
         /// Adds new RawMaterial to RawMaterial database.
         /// </summary>
@@ -48,7 +46,7 @@ namespace Capgemini.Inventory.DataAccessLayer
                 SqlParameter p5 = new SqlParameter("@creationdatetime", newRawMaterial.CreationDateTime);
                 SqlParameter p6 = new SqlParameter("@lastmodifiedatetime", newRawMaterial.LastModifiedDateTime);
 
-                //Createa list to add all SqlParameters
+                //Create list to add all SqlParameters
                 List<SqlParameter> sqlParameters = new List<SqlParameter>();
                 sqlParameters.Add(p1);
                 sqlParameters.Add(p2);
@@ -59,8 +57,11 @@ namespace Capgemini.Inventory.DataAccessLayer
                 sqlCommand.Parameters.AddRange(sqlParameters.ToArray());
 
                 sqlCommand.CommandType = CommandType.StoredProcedure;
+                //open Connection
                 sqlConn.Open();
+                //execute query
                 sqlCommand.ExecuteNonQuery();
+                //close connection
                 sqlConn.Close();
                 isAdded = true;
             }
@@ -80,28 +81,26 @@ namespace Capgemini.Inventory.DataAccessLayer
             List<RawMaterial> rawMaterialsList = new List<RawMaterial>();
             try
             {
+                //Create SqlCommand object
                 SqlCommand sqlCommand = new SqlCommand("select * from [13th Aug CLoud PT Immersive].Team_D.RawMaterial", sqlConn);
                 sqlCommand.CommandType = CommandType.Text;
-                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
-                //
-                //
-                //
-                //
-                //(try to change this to datareader;)
-                //
-                //
-                //
-                //
 
+                //create SqlDataAdapter object
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
                 sqlDataAdapter.SelectCommand = sqlCommand;
 
+                //create DataSet object
                 DataSet dtSet = new DataSet();
                 sqlDataAdapter.Fill(dtSet);
+
+                //create DataRow object
                 DataRow drow;
                 for (int i = 0; i < dtSet.Tables[0].Rows.Count; i++)
                 {
+                    //Add values in RawMaterial object and add to list
                     drow = dtSet.Tables[0].Rows[i];
                     RawMaterial rawMaterial = new RawMaterial();
+
                     rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID"];
                     rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime"];
                     rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
@@ -128,15 +127,20 @@ namespace Capgemini.Inventory.DataAccessLayer
             RawMaterial rawMaterial = new RawMaterial();
             try
             {
+                //Create SqlCommand object
                 SqlCommand sqlCommand = new SqlCommand("select * from Team_D.RawMaterial where RawMaterialID = @rawmaterialid", sqlConn);
                 sqlCommand.Parameters.AddWithValue("@rawmaterialid", searchRawMaterialID);
                 sqlCommand.CommandType = CommandType.Text;
 
+                //create SqlDataAdapter object
                 SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
                 sqlDataAdapter.SelectCommand = sqlCommand;
 
+                //create DataSet object
                 DataSet dtSet = new DataSet();
                 sqlDataAdapter.Fill(dtSet);
+
+                //create DataRow object
                 DataRow drow;
                 if (dtSet.Tables[0].Rows.Count > 0)
                 {
@@ -149,14 +153,6 @@ namespace Capgemini.Inventory.DataAccessLayer
                     rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
                     rawMaterial.RawMaterialPrice = Convert.ToDouble(drow["RawMaterialUnitPrice"]);
                 }
-                //drow = dtSet.Tables[0].Rows[0];
-
-                //rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID "];
-                //rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime "];
-                //rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
-                //rawMaterial.RawMaterialName = (string)drow["RawMaterialName "];
-                //rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
-                //rawMaterial.RawMaterialPrice = (double)drow["RawMaterialUnitPrice "];
             }
             catch (Exception)
             {
@@ -175,15 +171,22 @@ namespace Capgemini.Inventory.DataAccessLayer
             RawMaterial rawMaterial = new RawMaterial();
             try
             {
+                //create SqlCommand object
                 SqlCommand sqlCommand = new SqlCommand("select * from Team_D.RawMaterial where RawMaterialName = @rawmaterialname", sqlConn);
+
+                //add parameter
                 sqlCommand.Parameters.AddWithValue("@rawmaterialname", searchRawMaterialName);
                 sqlCommand.CommandType = CommandType.Text;
 
+                //create SqlDataAdapter object
                 SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
                 sqlDataAdapter.SelectCommand = sqlCommand;
 
+                //create DataSet object
                 DataSet dtSet = new DataSet();
                 sqlDataAdapter.Fill(dtSet);
+
+                //create DataRow object
                 DataRow drow;
                 if (dtSet.Tables[0].Rows.Count > 0)
                 {
@@ -196,15 +199,7 @@ namespace Capgemini.Inventory.DataAccessLayer
                     rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
                     rawMaterial.RawMaterialPrice = Convert.ToDouble(drow["RawMaterialUnitPrice"]);
                 }
-                //drow = dtSet.Tables[0].Rows[0];
-
-                //rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID "];
-                //rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime "];
-                //rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
-                //rawMaterial.RawMaterialName = (string)drow["RawMaterialName "];
-                //rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
-                //rawMaterial.RawMaterialPrice = (double)drow["RawMaterialUnitPrice "];
-            }
+               }
             catch (Exception)
             {
                 throw;
@@ -222,15 +217,22 @@ namespace Capgemini.Inventory.DataAccessLayer
             RawMaterial rawMaterial = new RawMaterial();
             try
             {
+                //creating SqlCommand object
                 SqlCommand sqlCommand = new SqlCommand("select * from Team_D.RawMaterial where RawMaterialCode = @rawmaterialcode", sqlConn);
+
+                //add parameter
                 sqlCommand.Parameters.AddWithValue("@rawmaterialcode", searchRawMaterialCode);
                 sqlCommand.CommandType = CommandType.Text;
 
+                //create SqlDataAdapter object
                 SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
                 sqlDataAdapter.SelectCommand = sqlCommand;
 
+                //create DataSet object
                 DataSet dtSet = new DataSet();
                 sqlDataAdapter.Fill(dtSet);
+
+                //create DataRow object
                 DataRow drow;
                 if (dtSet.Tables[0].Rows.Count > 0)
                 {
@@ -243,14 +245,6 @@ namespace Capgemini.Inventory.DataAccessLayer
                     rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
                     rawMaterial.RawMaterialPrice = Convert.ToDouble(drow["RawMaterialUnitPrice"]);
                 }
-                //drow = dtSet.Tables[0].Rows[0];
-
-                //rawMaterial.RawMaterialID = (Guid)drow["RawMaterialID"];
-                //rawMaterial.CreationDateTime = (DateTime)drow["CreationDateTime"];
-                //rawMaterial.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
-                //rawMaterial.RawMaterialName = (string)drow["RawMaterialName"];
-                //rawMaterial.RawMaterialCode = (string)drow["RawMaterialCode"];
-                //rawMaterial.RawMaterialPrice = (double)drow["RawMaterialUnitPrice"];
             }
             catch (Exception)
             {
@@ -258,7 +252,6 @@ namespace Capgemini.Inventory.DataAccessLayer
             }
             return rawMaterial;
         }
-
 
         /// <summary>
         /// Updates RawMaterial based on RawMaterialID.
@@ -271,7 +264,10 @@ namespace Capgemini.Inventory.DataAccessLayer
             updateRawMaterial.LastModifiedDateTime = DateTime.Now;
             try
             {
+                //creating connection object
                 SqlCommand cmd = new SqlCommand("Team_D.UpdateRawMaterial", sqlConn);
+
+                //adding parameters
                 SqlParameter p1 = new SqlParameter("@rawmaterialid", updateRawMaterial.RawMaterialID);
                 p1.DbType = DbType.Guid;
                 SqlParameter p2 = new SqlParameter("@rawmaterialname ", updateRawMaterial.RawMaterialName);
@@ -286,8 +282,11 @@ namespace Capgemini.Inventory.DataAccessLayer
                 cmd.Parameters.Add(p5);
 
                 cmd.CommandType = CommandType.StoredProcedure;
+                //open connection
                 sqlConn.Open();
+                //execute query
                 cmd.ExecuteNonQuery();
+                //close connection
                 sqlConn.Close();
                 isUpdated = true;
             }
@@ -308,13 +307,20 @@ namespace Capgemini.Inventory.DataAccessLayer
             bool isDeleted = false;
             try
             {
+                //create SqlCommand object
                 SqlCommand sqlCommand = new SqlCommand("delete from Team_D.RawMaterial where RawMaterialID  = @rawmaterialid", sqlConn);
+
+                //add parameters
                 sqlCommand.Parameters.AddWithValue("@rawmaterialid", deleteRawMaterialID);
                 sqlCommand.CommandType = CommandType.Text;
 
+                //open connection
                 sqlConn.Open();
+                //execute query
                 sqlCommand.ExecuteNonQuery();
+                //close connection
                 sqlConn.Close();
+
                 isDeleted = true;
             }
             catch (Exception)
@@ -490,5 +496,4 @@ namespace Capgemini.Inventory.DataAccessLayer
 //    }
 //    return RawMaterialDeleted;
 //}
-
 
