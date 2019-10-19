@@ -50,7 +50,10 @@
 
 
 
-
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+Harsha Sir WPF
     <Window.Resources>
         <Style x:Key="MyTextBlockStyle">
             <Setter Property="TextBlock.FontSize" Value="22px"></Setter>
@@ -92,4 +95,169 @@
                    VerticalAlignment="Center" Foreground="Coral"  Width="100px" Margin="10" Name="btnSave" Click="BtnSave_Click" >Save</Button>
         
     </Grid>
+
+
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+Anil Sir WPF
+
+    <Grid RenderTransformOrigin="0.045,0.198">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="19*"/>
+            <ColumnDefinition Width="53*"/>
+        </Grid.ColumnDefinitions>
+        <Button x:Name="btnTest" Content="Test" HorizontalAlignment="Left" Margin="286,207,0,0" VerticalAlignment="Top" Width="75" Click="btnTest_Click" Grid.Column="1"/>
+        <TextBox x:Name="txtName1" HorizontalAlignment="Left" Height="23" Margin="369,242,0,0" TextWrapping="Wrap" Text="Text Box" VerticalAlignment="Top" Width="120" Grid.Column="1"/>
+        <Label Content="Product" HorizontalAlignment="Left" Margin="53,16,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.477,0.788" Width="68"/>
+        <Label Content="Name" Margin="53,71,88,0" VerticalAlignment="Top" Height="26"/>
+        <Label Content="Type" HorizontalAlignment="Left" Margin="56,123,0,0" VerticalAlignment="Top" Width="65"/>
+        <Label Content="Entry Date" HorizontalAlignment="Left" Margin="56,189,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtName" HorizontalAlignment="Left" Height="26" Margin="153,71,0,0" TextWrapping="Wrap" Text="test" VerticalAlignment="Top" Width="203" Grid.ColumnSpan="2"/>
+        <ComboBox x:Name="cmbType" HorizontalAlignment="Left" Margin="153,127,0,0" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2">
+            <ComboBoxItem Content="Mobile" HorizontalAlignment="Left" Width="118"/>
+            <ComboBoxItem Content="Laptop" HorizontalAlignment="Left" Width="118"/>
+            <ComboBoxItem Content="Juice" HorizontalAlignment="Left" Width="118"/>
+        </ComboBox>
+        <DatePicker x:Name="dtEntryDate" HorizontalAlignment="Left" Margin="153,189,0,0" VerticalAlignment="Top" Width="120" Height="26" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="txtID" IsEnabled="False" HorizontalAlignment="Left" Height="23" Margin="153,19,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2"/>
+        <CheckBox x:Name="chkActive" Content="Active" HorizontalAlignment="Left" Margin="369,19,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+        <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left" Height="23" Margin="216,19,0,0" VerticalAlignment="Top" Width="95" Grid.Column="1"/>
+        <Button x:Name="btnDelete" Content="Delete" HorizontalAlignment="Left" Height="26" Margin="216,71,0,0" VerticalAlignment="Top" Width="95" Grid.Column="1"/>
+        <Button x:Name="btnRefresh" Content="Refresh" HorizontalAlignment="Left" Height="24" Margin="216,123,0,0" VerticalAlignment="Top" Width="95" Grid.Column="1"/>
+        <DataGrid x:Name="dgvData" SelectionChanged="dgvData_SelectionChanged" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="122" Margin="61,287,0,0" VerticalAlignment="Top" Width="619"/>
+        <Label x:Name="lblStatus" Grid.ColumnSpan="2" Content="......" HorizontalAlignment="Left" Height="32" Margin="56,238,0,0" VerticalAlignment="Top" Width="316"/>
+        
+    </Grid>
+    
+    
+    ----------------------------cs file---------------------------
+    
+    using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Data.SqlClient;
+using System.Data;
+
+namespace Invnetory
+{
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        SqlConnection sqlConn = new SqlConnection(Properties.Settings.Default.dbCon);
+        public MainWindow()
+        {
+            InitializeComponent();
+            dtEntryDate.SelectedDate = DateTime.Now;
+            dgvData.CanUserAddRows = false;
+            dgvData.CanUserDeleteRows = false;
+            loaddata();
+        }
+
+        private void btnTest_Click(object sender, RoutedEventArgs e)
+        {
+            this.Hide();
+            Window nt = new Window1();
+            nt.ShowDialog();
+            try
+            {
+                sqlConn.Open();
+                MessageBox.Show("Connected to database server");
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message);
+            }
+            //string query = "select * from product";
+            //DataSet dtSet = new DataSet();
+            //SqlDataAdapter sqlAdp = new SqlDataAdapter(query, sqlConn);
+            //SqlCommandBuilder sqlBld = new SqlCommandBuilder(sqlAdp);
+            //try
+            //{
+            //    sqlAdp.Fill(dtSet);
+            //    dtSet.Tables[0].Rows[0]["Product_name"] = txtName.Text;
+            //    sqlAdp.Update(dtSet);
+            //    dtSet.Tables[0].AcceptChanges();
+            //    MessageBox.Show("Data Saved");
+            //}
+            //catch (Exception exp)
+            //{
+            //    MessageBox.Show(exp.Message);
+            //}
+            string query = "insert into product values(101, @name, @type, getDate(), 'Y')";
+            SqlCommand sqlCmd = new SqlCommand(query);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@name", txtName.Text);
+            sqlCmd.Parameters.AddWithValue("@type", cmbType.Text);
+            sqlCmd.Connection = sqlConn;
+            try
+            {
+                sqlCmd.ExecuteNonQuery();
+                MessageBox.Show("Data Saved");
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message);
+            }
+        }
+
+        private void loaddata()
+        {
+            string query = "select * from product";
+            DataSet dtSet = new DataSet();
+            SqlDataAdapter sqlAdp = new SqlDataAdapter(query, sqlConn);
+
+            SqlCommandBuilder sqlBld = new SqlCommandBuilder(sqlAdp);
+            try
+            {
+                sqlAdp.Fill(dtSet);
+                dgvData.ItemsSource = dtSet.Tables[0].DefaultView;
+                lblStatus.Content = "fetched rows" + dtSet.Tables[0].Rows.Count.ToString();
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message);
+            }
+        }
+
+        private void BtnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            loaddata();
+        }
+
+        private void dgvData_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int rowindex = dgvData.SelectedIndex;
+            if (rowindex < 0)
+            {
+                return;
+            }
+            txtID.Text = getCellData(dgvData, rowindex, 0);
+            txtName.Text = getCellData(dgvData, rowindex, 1);
+            cmbType.Text = getCellData(dgvData, rowindex, 2);
+            dtEntryDate.SelectedDate = Convert.ToDateTime(getCellData(dgvData, rowindex, 3));
+            chkActive.IsChecked = (getCellData(dgvData, rowindex, 4) == "Y");
+        }
+
+        private string getCellData(DataGrid dgv, int rowindex, int cellindex)
+        {
+            DataGridRow drow = dgv.ItemContainerGenerator.ContainerFromIndex(rowindex) as DataGridRow;
+            var cellContent = dgv.Columns[cellindex].GetCellContent(drow) as TextBlock;
+            return cellContent.Text;
+        }
+    }
+}
 
