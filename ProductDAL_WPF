@@ -10,14 +10,15 @@ namespace Capgemini.Inventory.DataAccessLayer
 {
 	// Developed by Rohit Kumar (Group 4)
 	// Creation Date : 2019/09/22
-	// Last Modified Date : 2019/10/16
+	// Last Modified Date : 2019/10/17
 	
     /// <summary>
-    /// Contains data access layer methods for inserting, updating, deleting Products from Products database.
+    /// Contains data access layer methods for inserting, updating, deleting Products from Products collection.
     /// </summary>
     public class ProductDAL : ProductDALBase, IDisposable
     {
-        SqlConnection sqlConn = new SqlConnection(Properties.Settings.Default.dbConn);
+        //Create SqlConnection object
+        SqlConnection sqlConn = new SqlConnection(Properties.Settings.Default.dbCon);
 
         /// <summary>
         /// Adds new Product to Product database.
@@ -33,7 +34,10 @@ namespace Capgemini.Inventory.DataAccessLayer
                 newProduct.CreationDateTime = DateTime.Now;
                 newProduct.LastModifiedDateTime = DateTime.Now;
 
+                //Create SqlCommand object
                 SqlCommand sqlCommand = new SqlCommand("Team_D.AddProduct", sqlConn);
+
+                //Create SqlParameters
                 SqlParameter p1 = new SqlParameter("@productid", newProduct.ProductID);
                 p1.DbType = DbType.Guid;
                 SqlParameter p2 = new SqlParameter("@producttype", newProduct.ProductType);
@@ -41,6 +45,7 @@ namespace Capgemini.Inventory.DataAccessLayer
                 SqlParameter p4 = new SqlParameter("@productcode", newProduct.ProductCode);
                 SqlParameter p5 = new SqlParameter("@productunitprice", newProduct.ProductPrice);
 
+                //Create list to add all SqlParameters
                 List<SqlParameter> sqlParameters = new List<SqlParameter>();
                 sqlParameters.Add(p1);
                 sqlParameters.Add(p2);
@@ -50,8 +55,12 @@ namespace Capgemini.Inventory.DataAccessLayer
                 sqlCommand.Parameters.AddRange(sqlParameters.ToArray());
 
                 sqlCommand.CommandType = CommandType.StoredProcedure;
+
+                //open Connection
                 sqlConn.Open();
+                //execute query
                 sqlCommand.ExecuteNonQuery();
+                //close connection
                 sqlConn.Close();
 
                 isAdded = true;
@@ -72,16 +81,23 @@ namespace Capgemini.Inventory.DataAccessLayer
             List<Product> productsList = new List<Product>();
             try
             {
+                //Create SqlCommand object
                 SqlCommand sqlCommand = new SqlCommand("select * from Team_D.Product", sqlConn);
                 sqlCommand.CommandType = CommandType.Text;
+
+                //create SqlDataAdapter object
                 SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
                 sqlDataAdapter.SelectCommand = sqlCommand;
 
+                //create DataSet object
                 DataSet dtSet = new DataSet();
                 sqlDataAdapter.Fill(dtSet);
+
+                //create DataRow object
                 DataRow drow;
                 for (int i = 0; i < dtSet.Tables[0].Rows.Count; i++)
                 {
+                    //Add values in RawMaterial object and add to list
                     drow = dtSet.Tables[0].Rows[i];
                     Product product = new Product();
 
@@ -90,7 +106,7 @@ namespace Capgemini.Inventory.DataAccessLayer
                     product.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
                     product.ProductName = (string)drow["ProductName"];
                     product.ProductCode = (string)drow["ProductCode"];
-                    product.ProductPrice = (double)drow["ProductUnitPrice"];
+                    product.ProductPrice = Convert.ToDouble(drow["ProductUnitPrice"]);
                     product.ProductType = (string)drow["ProductType"];
                     productsList.Add(product);
                 }
@@ -112,28 +128,33 @@ namespace Capgemini.Inventory.DataAccessLayer
             Product product = new Product();
             try
             {
+                //Create SqlCommand object
                 SqlCommand sqlCommand = new SqlCommand("select * from Team_D.Product  where ProductID = @productid", sqlConn);
                 sqlCommand.Parameters.AddWithValue("@productid", searchProductID);
                 sqlCommand.CommandType = CommandType.Text;
 
+                //create SqlDataAdapter object
                 SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
                 sqlDataAdapter.SelectCommand = sqlCommand;
 
+                //create DataSet object
                 DataSet dtSet = new DataSet();
                 sqlDataAdapter.Fill(dtSet);
-                DataRow drow;
-		if (dtSet.Tables[0].Rows.Count > 0)
-		{
-                   drow = dtSet.Tables[0].Rows[0];
 
-                  product.ProductID = (Guid)drow["ProductID"];
-                  product.CreationDateTime = (DateTime)drow["CreationDateTime"];
-                  product.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
-                  product.ProductName = (string)drow["ProductName"];
-                  product.ProductCode = (string)drow["ProductCode"];
-                  product.ProductPrice = (double)drow["ProductUnitPrice"];
-                  product.ProductType = (string)drow["ProductType"];
-		}
+                //create DataRow object
+                DataRow drow;
+                if (dtSet.Tables[0].Rows.Count > 0)
+                {
+                    drow = dtSet.Tables[0].Rows[0];
+
+                    product.ProductID = (Guid)drow["ProductID"];
+                    product.CreationDateTime = (DateTime)drow["CreationDateTime"];
+                    product.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                    product.ProductName = (string)drow["ProductName"];
+                    product.ProductCode = (string)drow["ProductCode"];
+                    product.ProductPrice = Convert.ToDouble(drow["ProductUnitPrice"]);
+                    product.ProductType = (string)drow["ProductType"];
+                }
             }
             catch (Exception)
             {
@@ -152,28 +173,35 @@ namespace Capgemini.Inventory.DataAccessLayer
             Product product = new Product();
             try
             {
+                //create SqlCommand object
                 SqlCommand sqlCommand = new SqlCommand("select * from Team_D.Product  where ProductName = @productname", sqlConn);
+
+                //add parameter
                 sqlCommand.Parameters.AddWithValue("@productname", searchProductName);
                 sqlCommand.CommandType = CommandType.Text;
 
+                //create SqlDataAdapter object
                 SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
                 sqlDataAdapter.SelectCommand = sqlCommand;
 
+                //create DataSet object
                 DataSet dtSet = new DataSet();
                 sqlDataAdapter.Fill(dtSet);
+
+                //create DataRow object
                 DataRow drow;
                 if (dtSet.Tables[0].Rows.Count > 0)
-		{
-                   drow = dtSet.Tables[0].Rows[0];
+                {
+                    drow = dtSet.Tables[0].Rows[0];
 
-                  product.ProductID = (Guid)drow["ProductID"];
-                  product.CreationDateTime = (DateTime)drow["CreationDateTime"];
-                  product.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
-                  product.ProductName = (string)drow["ProductName"];
-                  product.ProductCode = (string)drow["ProductCode"];
-                  product.ProductPrice = (double)drow["ProductUnitPrice"];
-                  product.ProductType = (string)drow["ProductType"];
-		}
+                    product.ProductID = (Guid)drow["ProductID"];
+                    product.CreationDateTime = (DateTime)drow["CreationDateTime"];
+                    product.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                    product.ProductName = (string)drow["ProductName"];
+                    product.ProductCode = (string)drow["ProductCode"];
+                    product.ProductPrice = Convert.ToDouble(drow["ProductUnitPrice"]);
+                    product.ProductType = (string)drow["ProductType"];
+                }
             }
             catch (Exception)
             {
@@ -192,28 +220,35 @@ namespace Capgemini.Inventory.DataAccessLayer
             Product product = new Product();
             try
             {
+                //creating SqlCommand object
                 SqlCommand sqlCommand = new SqlCommand("select * from Team_D.Product  where ProductCode = @productcode", sqlConn);
+
+                //add parameter
                 sqlCommand.Parameters.AddWithValue("@productcode", searchProductCode);
                 sqlCommand.CommandType = CommandType.Text;
 
+                //create SqlDataAdapter object
                 SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
                 sqlDataAdapter.SelectCommand = sqlCommand;
 
+                //create DataSet object
                 DataSet dtSet = new DataSet();
                 sqlDataAdapter.Fill(dtSet);
+
+                //create DataRow object
                 DataRow drow;
                 if (dtSet.Tables[0].Rows.Count > 0)
-		{
-                   drow = dtSet.Tables[0].Rows[0];
+                {
+                    drow = dtSet.Tables[0].Rows[0];
 
-                  product.ProductID = (Guid)drow["ProductID"];
-                  product.CreationDateTime = (DateTime)drow["CreationDateTime"];
-                  product.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
-                  product.ProductName = (string)drow["ProductName"];
-                  product.ProductCode = (string)drow["ProductCode"];
-                  product.ProductPrice = (double)drow["ProductUnitPrice"];
-                  product.ProductType = (string)drow["ProductType"];
-		}
+                    product.ProductID = (Guid)drow["ProductID"];
+                    product.CreationDateTime = (DateTime)drow["CreationDateTime"];
+                    product.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
+                    product.ProductName = (string)drow["ProductName"];
+                    product.ProductCode = (string)drow["ProductCode"];
+                    product.ProductPrice = Convert.ToDouble(drow["ProductUnitPrice"]);
+                    product.ProductType = (string)drow["ProductType"];
+                }
             }
             catch (Exception)
             {
@@ -232,15 +267,22 @@ namespace Capgemini.Inventory.DataAccessLayer
             List<Product> productsList = new List<Product>();
             try
             {
+                //creating connection object
                 SqlCommand sqlCommand = new SqlCommand("select * from Team_D.Product where ProductType = @producttype", sqlConn);
+
+                //add parameter
                 sqlCommand.Parameters.AddWithValue("@producttype", searchProductType);
                 sqlCommand.CommandType = CommandType.Text;
 
+                //create SqlDataAdapter object
                 SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
                 sqlDataAdapter.SelectCommand = sqlCommand;
 
+                //create DataSet object
                 DataSet dtSet = new DataSet();
                 sqlDataAdapter.Fill(dtSet);
+
+                //create DataRow object
                 DataRow drow;
                 for (int i = 0; i < dtSet.Tables[0].Rows.Count; i++)
                 {
@@ -252,7 +294,7 @@ namespace Capgemini.Inventory.DataAccessLayer
                     product.LastModifiedDateTime = (DateTime)drow["LastUpdateDateTime"];
                     product.ProductName = (string)drow["ProductName"];
                     product.ProductCode = (string)drow["ProductCode"];
-                    product.ProductPrice = (double)drow["ProductUnitPrice"];
+                    product.ProductPrice = Convert.ToDouble(drow["ProductUnitPrice"]);
                     product.ProductType = (string)drow["ProductType"];
                     productsList.Add(product);
                 }
@@ -274,7 +316,10 @@ namespace Capgemini.Inventory.DataAccessLayer
             bool isUpdated = false;
             try
             {
+                //creating connection object
                 SqlCommand cmd = new SqlCommand("Team_D.UpdateProduct", sqlConn);
+
+                //adding parameters
                 SqlParameter p1 = new SqlParameter("@productid", updateProduct.ProductID);
                 p1.DbType = DbType.Guid;
                 SqlParameter p2 = new SqlParameter("@productname", updateProduct.ProductName);
@@ -289,9 +334,13 @@ namespace Capgemini.Inventory.DataAccessLayer
                 cmd.Parameters.Add(p5);
 
                 cmd.CommandType = CommandType.StoredProcedure;
+                //open connection
                 sqlConn.Open();
+                //execute query
                 cmd.ExecuteNonQuery();
+                //close connection
                 sqlConn.Close();
+
                 isUpdated = true;
             }
             catch (Exception)
@@ -311,12 +360,18 @@ namespace Capgemini.Inventory.DataAccessLayer
             bool isDeleted = false;
             try
             {
+                //create SqlCommand object
                 SqlCommand sqlCommand = new SqlCommand("delete from Team_D.Product where ProductID = @productid", sqlConn);
+
+                //add parameters
                 sqlCommand.Parameters.AddWithValue("@productid", deleteProductID);
                 sqlCommand.CommandType = CommandType.Text;
 
+                //open connection
                 sqlConn.Open();
+                //execute query
                 sqlCommand.ExecuteNonQuery();
+                //close connection
                 sqlConn.Close();
                 isDeleted = true;
             }
@@ -334,6 +389,7 @@ namespace Capgemini.Inventory.DataAccessLayer
         {
             //No unmanaged resources currently
         }
+
     }
 }
 
@@ -436,7 +492,7 @@ namespace Capgemini.Inventory.DataAccessLayer
 //}
 
 /// <summary>
-/// Gets Products based on ProductType.
+/// Gets Products based on ProductName.
 /// </summary>
 /// <param name="searchProductType">Represents ProductType to search.</param>
 /// <returns>Returns list of Product objects.</returns>
@@ -490,7 +546,7 @@ namespace Capgemini.Inventory.DataAccessLayer
 /// Deletes Product based on ProductID.
 /// </summary>
 /// <param name="deleteProductID">Represents ProductID to delete.</param>
-/// <returns>Determinates whether the existing Product is deleted.</returns>
+/// <returns>Determinates whether the existing Product is updated.</returns>
 //public override bool DeleteProductDAL(Guid deleteProductID)
 //{
 //    bool ProductDeleted = false;
@@ -514,3 +570,5 @@ namespace Capgemini.Inventory.DataAccessLayer
 //    }
 //    return ProductDeleted;
 //}
+
+
