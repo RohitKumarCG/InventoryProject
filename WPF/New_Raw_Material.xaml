@@ -1,0 +1,47 @@
+    <Window.Resources>
+        <Style x:Key="MyTextBoxStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="FontSize" Value="16px"></Setter>
+            <Setter Property="Background" Value="#e7e7e7"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+            <Setter Property="VerticalAlignment" Value="Top"></Setter>
+            <Setter Property="Width" Value="299"></Setter>
+            <Setter Property="TextWrapping" Value="Wrap"></Setter>
+            <Setter Property="Height" Value="26"></Setter>
+        </Style>
+
+        <Style x:Key="MyLabelStyle" TargetType="{x:Type Label}">
+            <Setter Property="FontSize" Value="15px"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+            <Setter Property="VerticalAlignment" Value="Top"></Setter>
+            <Setter Property="Width" Value="150"></Setter>
+            <Setter Property="Height" Value="30"></Setter>
+        </Style>
+
+        <Style x:Key="MyButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="FontSize" Value="16px"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+            <Setter Property="VerticalAlignment" Value="Top"></Setter>
+            <Setter Property="Width" Value="110"></Setter>
+            <Setter Property="Height" Value="30"></Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Background="PeachPuff">
+
+        <Label Content="New Raw Material" HorizontalAlignment="Left" Margin="100,10,0,0" FontSize="22px" FontWeight="DemiBold" VerticalAlignment="Top" Width="241"/>
+
+        <Label Content="Raw Material Name *" Margin="106,76,0,0" Style="{StaticResource MyLabelStyle}"/>
+        <Label Content="Raw Material Code *" Margin="106,151,0,0" Style="{StaticResource MyLabelStyle}" />
+        <Label Content="Unit Price *"  Margin="106,226,0,0" Style="{StaticResource MyLabelStyle}"/>
+
+        <TextBox x:Name="txtRawMaterialName" PreviewTextInput="literalValidation" Margin="286,76,0,0" Text="" Style ="{StaticResource MyTextBoxStyle}"/>
+        <TextBox x:Name="txtRawMaterialCode" PreviewTextInput="literalValidation" Margin="286,151,0,0" Text="" Style ="{StaticResource MyTextBoxStyle}"/>
+        <TextBox x:Name="txtRMUnitPrice" PreviewTextInput="positiveNumberValidation" Margin="286,226,0,0" Text="" Style="{StaticResource MyTextBoxStyle}"/>
+
+        <Border BorderBrush="RosyBrown" CornerRadius="8" BorderThickness="1" HorizontalAlignment="Left" Height="233" VerticalAlignment="Top" Width="642" Margin="70,57,0,0"/>
+
+        <Button Content="Home" Margin="84,333,0,0" Style="{StaticResource MyButtonStyle}" Click="BtnNRMHome_Click"/>
+        <Button Content="Reset" Margin="334,333,0,0" Style="{StaticResource MyButtonStyle}" Click="BtnNRMReset_Click"/>
+        <Button Content="Save" Margin="584,333,0,0" Style="{StaticResource MyButtonStyle}" Click="BtnNRMSave_Click"/>
+
+    </Grid>
