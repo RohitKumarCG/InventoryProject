@@ -1,0 +1,48 @@
+      <Window.Resources>
+        <Style x:Key="MyTextBoxStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="FontSize" Value="16px"></Setter>
+            <Setter Property="Background" Value="#e7e7e7"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+            <Setter Property="VerticalAlignment" Value="Top"></Setter>
+            <Setter Property="Width" Value="299"></Setter>
+            <Setter Property="TextWrapping" Value="Wrap"></Setter>
+            <Setter Property="Height" Value="26"></Setter>
+        </Style>
+
+        <Style x:Key="MyLabelStyle" TargetType="{x:Type Label}">
+            <Setter Property="FontSize" Value="15px"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+            <Setter Property="VerticalAlignment" Value="Top"></Setter>
+            <Setter Property="Width" Value="150"></Setter>
+            <Setter Property="Height" Value="30"></Setter>
+        </Style>
+
+        <Style x:Key="MyButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="FontSize" Value="16px"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+            <Setter Property="VerticalAlignment" Value="Top"></Setter>
+            <Setter Property="Width" Value="110"></Setter>
+            <Setter Property="Height" Value="30"></Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Background="PeachPuff">
+
+        <Label Content="Raw Material ID" Margin="45,48,0,0" Style="{StaticResource MyLabelStyle}"/>
+        <Label Content="Raw Material Name *" Margin="45,98,0,0" Style="{StaticResource MyLabelStyle}"/>
+        <Label Content="Raw Material Code *" Margin="45,148,0,0" Style="{StaticResource MyLabelStyle}"/>
+        <Label Content="Raw Material Price *" Margin="45,198,0,0" Style="{StaticResource MyLabelStyle}"/>
+        <Label x:Name="lblStatus" Content="..." Margin="50,255,0,0" Style="{StaticResource MyLabelStyle}"/>
+
+        <TextBox Text="ID" Margin="210,48,0,0" Style="{StaticResource MyTextBoxStyle}" IsEnabled="False"/>
+        <TextBox Text="" PreviewTextInput="literalValidation" Margin="210,98,0,0" Style="{StaticResource MyTextBoxStyle}" />
+        <TextBox Text="" PreviewTextInput="literalValidation" Margin="210,148,0,0" Style="{StaticResource MyTextBoxStyle}" />
+        <TextBox Text="" PreviewTextInput="positiveNumberValidation" Margin="210,198,0,0" Style="{StaticResource MyTextBoxStyle}" />
+
+        <Button Content="Save" Margin="600,32,0,0" Style="{StaticResource MyButtonStyle}" Click="BtnMRMSave_Click"/>
+        <Button Content="Delete" Margin="600,92,0,0" Style="{StaticResource MyButtonStyle}" Click="BtnMRMDelete_Click"/>
+        <Button Content="Refresh" Margin="600,152,0,0" Style="{StaticResource MyButtonStyle}" Click="BtnMRMRefresh_Click"/>
+        <Button Content="Home" Margin="600,212,0,0" Style="{StaticResource MyButtonStyle}" Click="BtnMRMHome_Click"/>
+
+        <DataGrid x:Name="dgvData" HorizontalAlignment="Left" Height="122" Margin="51,287,0,0" VerticalAlignment="Top" Width="629"/>
+    </Grid>
