@@ -1,0 +1,63 @@
+    <Window.Resources>
+        <Style x:Key="MyTextBoxStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="FontSize" Value="16px"></Setter>
+            <Setter Property="Background" Value="#e7e7e7"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+            <Setter Property="VerticalAlignment" Value="Top"></Setter>
+            <Setter Property="Width" Value="299"></Setter>
+            <Setter Property="TextWrapping" Value="Wrap"></Setter>
+            <Setter Property="Height" Value="26"></Setter>
+        </Style>
+
+        <Style x:Key="MyComboBoxItemStyle" TargetType="{x:Type ComboBoxItem}">
+            <Setter Property="FontSize" Value="14px"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+            <Setter Property="Width" Value="199"></Setter>
+        </Style>
+
+        <Style x:Key="MyLabelStyle" TargetType="{x:Type Label}">
+            <Setter Property="FontSize" Value="15px"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+            <Setter Property="VerticalAlignment" Value="Top"></Setter>
+            <Setter Property="Width" Value="125"></Setter>
+            <Setter Property="Height" Value="30"></Setter>
+        </Style>
+
+        <Style x:Key="MyButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="FontSize" Value="16px"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+            <Setter Property="VerticalAlignment" Value="Top"></Setter>
+            <Setter Property="Width" Value="110"></Setter>
+            <Setter Property="Height" Value="30"></Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Background="PeachPuff">
+
+        <Label Content="Product ID" Margin="50,24,0,0" Style="{StaticResource MyLabelStyle}"/>
+        <Label Content="Product Name *" Margin="50,74,0,0" Style="{StaticResource MyLabelStyle}"/>
+        <Label Content="Product Code *" Margin="50,124,0,0" Style="{StaticResource MyLabelStyle}"/>
+        <Label Content="Product Price *" Margin="50,174,0,0" Style="{StaticResource MyLabelStyle}"/>
+        <Label Content="Product Type" Margin="50,224,0,0" Style="{StaticResource MyLabelStyle}"/>        
+        <Label x:Name="lblStatus" Content="..." Margin="50,255,0,0" Style="{StaticResource MyLabelStyle}"/>
+
+        <TextBox Text="ID" Margin="200,24,0,0" Style="{StaticResource MyTextBoxStyle}" IsEnabled="False"/>
+        <TextBox Text="" PreviewTextInput="literalValidation" Margin="200,74,0,0" Style="{StaticResource MyTextBoxStyle}" />
+        <TextBox Text="" PreviewTextInput="literalValidation" Margin="200,124,0,0" Style="{StaticResource MyTextBoxStyle}" />
+        <TextBox Text="" PreviewTextInput="positiveNumberValidation" Margin="200,174,0,0" Style="{StaticResource MyTextBoxStyle}" />
+
+        <ComboBox HorizontalAlignment="Left" Margin="200,224,0,0" VerticalAlignment="Top" Width="200" FontSize="14px" FontWeight="Medium" IsEnabled="False">
+            <ComboBoxItem Content="Juice" Style="{StaticResource MyComboBoxItemStyle}"/>
+            <ComboBoxItem Content="Energy Drink" Style="{StaticResource MyComboBoxItemStyle}"/>
+            <ComboBoxItem Content="Mocktail" Style="{StaticResource MyComboBoxItemStyle}"/>
+            <ComboBoxItem Content="Tonic Water" Style="{StaticResource MyComboBoxItemStyle}"/>
+            <ComboBoxItem Content="Soft Drink" Style="{StaticResource MyComboBoxItemStyle}"/>
+        </ComboBox>
+
+        <Button Content="Save" Margin="600,32,0,0" Style="{StaticResource MyButtonStyle}" Click="BtnMPSave_Click"/>
+        <Button Content="Delete" Margin="600,92,0,0" Style="{StaticResource MyButtonStyle}" Click="BtnMPDelete_Click"/>
+        <Button Content="Refresh" Margin="600,152,0,0" Style="{StaticResource MyButtonStyle}" Click="BtnMPRefresh_Click"/>
+        <Button Content="Home" Margin="600,212,0,0" Style="{StaticResource MyButtonStyle}" Click="BtnMPHome_Click"/>
+
+        <DataGrid x:Name="dgvData" HorizontalAlignment="Left" Height="122" Margin="51,287,0,0" VerticalAlignment="Top" Width="629"/>
+    </Grid>
