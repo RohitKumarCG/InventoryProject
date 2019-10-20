@@ -1,0 +1,19 @@
+    <Grid Background="PeachPuff">
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Background="Linen" Header="Raw Material">
+                    <MenuItem Header="Add New Raw Material" Click="BtnAddNewRawMaterial_Click"/>
+                    <MenuItem Header="Manage Raw Materials" Click="BtnManageRawMaterials_Click"/>
+                </MenuItem>
+                <MenuItem Background="Linen" Header="Product">
+                    <MenuItem Header="Add New Product" Click="BtnAddNewProduct_Click"/>
+                    <MenuItem Header="Manage Products" Click="BtnManageProducts_Click"/>
+                </MenuItem>
+                <MenuItem Background="Linen" Header="Order">
+                    <MenuItem Header="New Order"/>
+                    <MenuItem Header="Delete Order"/>
+                </MenuItem>
+            </Menu>
+            <StackPanel></StackPanel>
+        </DockPanel>
+    </Grid>
