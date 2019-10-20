@@ -1,0 +1,61 @@
+    <Window.Resources>
+        <Style x:Key="MyTextBoxStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="FontSize" Value="16px"></Setter>
+            <Setter Property="Background" Value="#e7e7e7"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+            <Setter Property="VerticalAlignment" Value="Top"></Setter>
+            <Setter Property="Width" Value="299"></Setter>
+            <Setter Property="TextWrapping" Value="Wrap"></Setter>
+            <Setter Property="Height" Value="26"></Setter>
+        </Style>
+
+        <Style x:Key="MyComboBoxItemStyle" TargetType="{x:Type ComboBoxItem}">
+            <Setter Property="FontSize" Value="14px"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+            <Setter Property="Width" Value="199"></Setter>
+        </Style>
+
+        <Style x:Key="MyLabelStyle" TargetType="{x:Type Label}">
+            <Setter Property="FontSize" Value="15px"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+            <Setter Property="VerticalAlignment" Value="Top"></Setter>
+            <Setter Property="Width" Value="125"></Setter>
+            <Setter Property="Height" Value="30"></Setter>
+        </Style>
+
+        <Style x:Key="MyButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="FontSize" Value="16px"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+            <Setter Property="VerticalAlignment" Value="Top"></Setter>
+            <Setter Property="Width" Value="110"></Setter>
+            <Setter Property="Height" Value="30"></Setter>
+        </Style>
+    </Window.Resources>
+    <Grid Background="PeachPuff">
+
+        <Label Content="New Product" HorizontalAlignment="Left" Margin="100,9,0,0" FontSize="22px" FontWeight="DemiBold" VerticalAlignment="Top" Width="241"/>
+
+        <Label Content="Product Name *" Margin="106,72,0,0" Style="{StaticResource MyLabelStyle}"/>
+        <Label Content="Product Code *" Margin="106,147,0,0" Style="{StaticResource MyLabelStyle}" />
+        <Label Content="Unit Price *"  Margin="106,222,0,0" Style="{StaticResource MyLabelStyle}"/>
+        <Label Content="Select Category" Margin="106,297,0,0" Style="{StaticResource MyLabelStyle}"/>
+
+        <ComboBox HorizontalAlignment="Left" Margin="286,297,0,0" VerticalAlignment="Top" Width="200" FontSize="14px" FontWeight="Medium">
+            <ComboBoxItem Content="Juice" IsSelected="True" Style="{StaticResource MyComboBoxItemStyle}"/>
+            <ComboBoxItem Content="Energy Drink" Style="{StaticResource MyComboBoxItemStyle}"/>
+            <ComboBoxItem Content="Mocktail" Style="{StaticResource MyComboBoxItemStyle}"/>
+            <ComboBoxItem Content="Tonic Water" Style="{StaticResource MyComboBoxItemStyle}"/>
+            <ComboBoxItem Content="Soft Drink" Style="{StaticResource MyComboBoxItemStyle}"/>
+        </ComboBox>
+
+        <TextBox x:Name="txtProductName" PreviewTextInput="literalValidation" Margin="286,72,0,0" Text="" Style ="{StaticResource MyTextBoxStyle}" />
+        <TextBox x:Name="txtProductCode" PreviewTextInput="literalValidation" Margin="286,147,0,0" Text="" Style ="{StaticResource MyTextBoxStyle}"/>
+        <TextBox x:Name="txtPUnitPrice" PreviewTextInput="positiveNumberValidation" Margin="286,222,0,0" Text="" Style="{StaticResource MyTextBoxStyle}"/>
+
+        <Border BorderBrush="RosyBrown" CornerRadius="8" BorderThickness="1" HorizontalAlignment="Left" Height="291" VerticalAlignment="Top" Width="642" Margin="70,53,0,0"/>
+
+        <Button Content="Home" Margin="87,365,0,0" Style="{StaticResource MyButtonStyle}" Click="BtnNPHome_Click"/>
+        <Button Content="Reset" Margin="337,365,0,0" Style="{StaticResource MyButtonStyle}" Click="BtnNPReset_Click"/>
+        <Button Content="Save" Margin="587,365,0,0" Style="{StaticResource MyButtonStyle}" Click="BtnNPSave_Click"/>
+
+    </Grid>
