@@ -1,0 +1,27 @@
+        protected void NewButton_Click(object sender, EventArgs e)
+        {
+            SqlConnection sqlConnection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["dbcon"].ConnectionString);
+            SqlCommand sqlCommand = new SqlCommand("select * from [13th Aug CLoud PT Immersive].Team_D.RawMaterial", sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+
+            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+            sqlDataAdapter.SelectCommand = sqlCommand;
+
+            //create DataSet object
+            DataSet dtSet = new DataSet();
+            sqlDataAdapter.Fill(dtSet);
+
+            gvOrders.DataSource = dtSet.Tables[0];
+            gvOrders.DataBind();
+
+        }
+        
+        
+        
+        
+        <!---To create grid view---->
+        <asp:GridView runat="server" ID="gvOrders" AutoGenerateColumns="true">
+            <Columns>
+
+            </Columns>
+            </asp:GridView>
