@@ -1,10 +1,10 @@
-    <Window.Resources>
+       <Window.Resources>
         <Style x:Key="MyTextBoxStyle" TargetType="{x:Type TextBox}">
             <Setter Property="FontSize" Value="16px"></Setter>
             <Setter Property="Background" Value="#e7e7e7"></Setter>
             <Setter Property="HorizontalAlignment" Value="Left"></Setter>
             <Setter Property="VerticalAlignment" Value="Top"></Setter>
-            <Setter Property="Width" Value="299"></Setter>
+            <Setter Property="Width" Value="350"></Setter>
             <Setter Property="TextWrapping" Value="Wrap"></Setter>
             <Setter Property="Height" Value="26"></Setter>
         </Style>
@@ -38,15 +38,15 @@
         <Label Content="Product Name *" Margin="50,74,0,0" Style="{StaticResource MyLabelStyle}"/>
         <Label Content="Product Code *" Margin="50,124,0,0" Style="{StaticResource MyLabelStyle}"/>
         <Label Content="Product Price *" Margin="50,174,0,0" Style="{StaticResource MyLabelStyle}"/>
-        <Label Content="Product Type" Margin="50,224,0,0" Style="{StaticResource MyLabelStyle}"/>        
+        <Label Content="Product Type" Margin="50,224,0,0" Style="{StaticResource MyLabelStyle}"/>
         <Label x:Name="lblStatus" Content="..." Margin="50,255,0,0" Style="{StaticResource MyLabelStyle}"/>
 
-        <TextBox Text="ID" Margin="200,24,0,0" Style="{StaticResource MyTextBoxStyle}" IsEnabled="False"/>
-        <TextBox Text="" PreviewTextInput="literalValidation" Margin="200,74,0,0" Style="{StaticResource MyTextBoxStyle}" />
-        <TextBox Text="" PreviewTextInput="literalValidation" Margin="200,124,0,0" Style="{StaticResource MyTextBoxStyle}" />
-        <TextBox Text="" PreviewTextInput="positiveNumberValidation" Margin="200,174,0,0" Style="{StaticResource MyTextBoxStyle}" />
+        <TextBox x:Name="txtMPProductID" Text="ID" Margin="200,24,0,0" Style="{StaticResource MyTextBoxStyle}" IsEnabled="False"/>
+        <TextBox x:Name="txtMPProductName" Text="" PreviewTextInput="literalValidation" Margin="200,74,0,0" Style="{StaticResource MyTextBoxStyle}" />
+        <TextBox x:Name="txtMPProductCode" Text="" PreviewTextInput="literalValidation" Margin="200,124,0,0" Style="{StaticResource MyTextBoxStyle}" />
+        <TextBox x:Name="txtMPProductPrice" Text="" PreviewTextInput="positiveNumberValidation" Margin="200,174,0,0" Style="{StaticResource MyTextBoxStyle}" />
 
-        <ComboBox HorizontalAlignment="Left" Margin="200,224,0,0" VerticalAlignment="Top" Width="200" FontSize="14px" FontWeight="Medium" IsEnabled="False">
+        <ComboBox x:Name="cmbProductType" HorizontalAlignment="Left" Margin="200,224,0,0" VerticalAlignment="Top" Width="200" FontSize="14px" FontWeight="Medium" IsEnabled="False">
             <ComboBoxItem Content="Juice" Style="{StaticResource MyComboBoxItemStyle}"/>
             <ComboBoxItem Content="Energy Drink" Style="{StaticResource MyComboBoxItemStyle}"/>
             <ComboBoxItem Content="Mocktail" Style="{StaticResource MyComboBoxItemStyle}"/>
@@ -59,5 +59,5 @@
         <Button Content="Refresh" Margin="600,152,0,0" Style="{StaticResource MyButtonStyle}" Click="BtnMPRefresh_Click"/>
         <Button Content="Home" Margin="600,212,0,0" Style="{StaticResource MyButtonStyle}" Click="BtnMPHome_Click"/>
 
-        <DataGrid x:Name="dgvData" HorizontalAlignment="Left" Height="122" Margin="51,287,0,0" VerticalAlignment="Top" Width="629"/>
+        <DataGrid x:Name="dgvData" SelectionChanged="dgvData_SelectionChanged" HorizontalAlignment="Left" Height="122" Margin="51,287,0,0" VerticalAlignment="Top" Width="629"/>
     </Grid>
