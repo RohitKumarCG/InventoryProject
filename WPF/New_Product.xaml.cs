@@ -1,8 +1,8 @@
         //on home button click
         private void BtnNPHome_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
+            SystemUserHome systemUserHome = new SystemUserHome();
+            systemUserHome.Show();
             this.Close();
         }
 
@@ -15,11 +15,54 @@
         }
 
         //on save button click
-        private void BtnNPSave_Click(object sender, RoutedEventArgs e)
+        private async void BtnNPSave_Click(object sender, RoutedEventArgs e)
         {
-            ManageProducts manageProducts = new ManageProducts();
-            manageProducts.Show();
-            this.Close();
+            try
+            {
+                Product product = new Product();
+
+                product.ProductName = txtProductName.Text;
+                product.ProductCode = txtProductCode.Text;
+                product.ProductPrice = Convert.ToDouble(txtPUnitPrice.Text);
+
+                if (cmbProductType.Text == "Juice")
+                {
+                    product.ProductType = "Juice";
+                }
+                if (cmbProductType.Text == "Energy Drink")
+                {
+                    product.ProductType = "Energy Drink";
+                }
+                if (cmbProductType.Text == "Mocktail")
+                {
+                    product.ProductType = "Mocktail";
+                }
+                if (cmbProductType.Text == "Tonic Water")
+                {
+                    product.ProductType = "Tonic Water";
+                }
+                if (cmbProductType.Text == "Soft Drink")
+                {
+                    product.ProductType = "Soft Drink";
+                }
+
+                using (ProductBL productBL = new ProductBL())
+                {
+                    bool isAdded = await productBL.AddProductBL(product);
+                    if (isAdded)
+                    {
+                        MessageBox.Show($"Product {product.ProductName} added");
+                        ManageProducts manageProducts = new ManageProducts();
+                        manageProducts.Show();
+                        this.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionLogger.LogException(ex);
+                MessageBox.Show(ex.Message);
+            }
         }
 
         //positive number validation
