@@ -1,4 +1,4 @@
-    <Window.Resources>
+     <Window.Resources>
         <Style x:Key="MyTextBoxStyle" TargetType="{x:Type TextBox}">
             <Setter Property="FontSize" Value="16px"></Setter>
             <Setter Property="Background" Value="#e7e7e7"></Setter>
