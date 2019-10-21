@@ -1,0 +1,61 @@
+body, div, p, li, ul, ol, form
+{
+    padding: 0;
+    margin: 0;
+}
+
+body 
+{
+    background-color: rgb(210, 212, 213);
+    font-family: Arial, 'Times New Roman';
+    font-size: 12px;
+    height: 100%;
+}
+
+
+
+.content
+{
+    width: 100%;
+    background-color: rgb(50, 208, 208);
+    border: 1px solid rgb(11,224,224);
+    border-radius: 5px 5px 5px 5px;
+    float: left;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    min-height: 677px;
+}
+
+.menu {
+    background-color: rgb(5, 128, 128);
+    width: 100%;
+    margin: 0px 0px 10px;
+    padding: 0px;
+    height: 40px;
+    color: rgb(255, 255, 255);
+    border-radius: 5px 5px 5px 5px;
+}
+
+.menu ul li {
+    float: left;
+    display: block;
+    list-style: none;
+    border-left: 1px solid rgb(112, 109, 116);
+    border-right: 1px solid rgb(128, 128, 128);
+}
+
+
+.menu ul li a{
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 40px;
+    padding: 8px 20px;
+    color: rgb(255,255,255);
+    text-decoration: none;
+}
+
+.menu ul li:hover
+{
+    background-color: rgb(8, 58, 58);
+    border-right: 1px solid rgb(14, 89, 130); 
+}
