@@ -1,0 +1,135 @@
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WebForm1.aspx.cs" Inherits="ASPDemo.WebForm1" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>
+        <%="Capgemini" %>
+    </title>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <%Response.Write(DateTime.Now.ToLongDateString()); %><br />
+        <asp:Label runat="server" ID="lblVersion" Text="Label: " />
+        <asp:TextBox runat="server" ID="txt1" /> <br />
+        <asp:TextBox runat="server" ID="txt2" /> <br />
+        <asp:Button runat="server" Text="submit" /> <br />
+
+        <table border="1">
+            <tr>
+                <td>Product</td>
+                <td> <asp:DropDownList runat="server" ID="ddlProducts" >
+                        <asp:ListItem Text ="Redmi" Value="1" />
+                        <asp:ListItem Text ="Apple" Value="2" />
+                        <asp:ListItem Text ="Samsung" Value="3" />
+                     </asp:DropDownList> </td>
+            </tr>
+             <tr>
+                <td>Type</td>
+                <td> <asp:Label runat="server" ID="lblType" /></td>
+            </tr>
+             <tr>
+                <td>Rate</td>
+                <td> <asp:TextBox runat="server" ID="txtRate" /></td>
+            </tr>
+            <tr>
+                <td>Quantity</td>
+                <td> <asp:TextBox runat="server" ID="txtQuantity" /></td>
+            </tr>
+            <tr>
+                <td>Amount</td>
+                <td> <asp:TextBox runat="server" ID="txtAmount" ReadOnly="true" /></td>
+            </tr>
+            <tr><td>&nbsp</td><td><asp:Button runat="server" ID="btbProduct" Text="Product" OnClick="btbProduct_Click" BackColor="Red"/></td></tr>
+        </table>
+        <asp:Label runat="server" ID="lblTest" />
+
+        <br />  
+        <br />
+        <asp:Button runat="server" ID="NewButton" Text="New Button" OnClick="NewButton_Click" />
+        
+      
+        <br />
+        <br />
+
+        <!---To create grid view---->
+        <asp:GridView runat="server" ID="gvOrders" AutoGenerateColumns="true">
+            <Columns>
+
+            </Columns>
+            </asp:GridView>
+
+        <div>
+        </div>
+    </form>
+</body>
+</html>
+
+<script type ="text/javascript">
+    <%= "alert('this is my alert');"%>
+</script>
+
+
+-----------------------------------------------------
+
+protected void Page_Load(object sender, EventArgs e)
+        {
+            //lblVersion.Text = DateTime.Now.ToLongDateString();
+            
+            //new value on each reload
+            //postback is false on first loading
+            //true after the first loading
+            if (IsPostBack)
+            {
+                return;
+            }
+            //loads only first time, returns the first value even after reload
+            else
+            {
+                lblTest.Text = DateTime.Now.ToString();
+            }
+        }
+
+        protected void btbProduct_Click(object sender, EventArgs e)
+        {
+            lblTest.Text = ddlProducts.Text;
+            int rate = Convert.ToInt32(txtRate.Text);
+            int quantity = Convert.ToInt32(txtQuantity.Text);
+            txtAmount.Text = Convert.ToString(rate * quantity);
+           
+            //--------------------------------------------//
+            ////to populate dropdown using datatable
+            ////product_name and product_id are columns of table
+            ////retreive data into dt.Set
+            //ddlProducts.DataSource = dtSet.Tables[0];
+            //ddlProducts.DataTextField = "product_name";
+            //ddlProducts.DataValueField = "product_id";
+            //ddlProducts.DataBind();
+            ////to set a default msg in dropdownlist
+            //ddlProducts.Items.Insert(0, "---Select Type---");
+
+            //-----------------------------------//
+            ////using datareader to do the same
+            ////create reader and store a row in listitem
+            //ListItem itm = new ListItem("Redmi", "1");
+            //ddlProducts.Items.Add(itm);
+        }
+
+        protected void NewButton_Click(object sender, EventArgs e)
+        {
+            SqlConnection sqlConnection = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["dbcon"].ConnectionString);
+            SqlCommand sqlCommand = new SqlCommand("select * from [13th Aug CLoud PT Immersive].Team_D.RawMaterial", sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+
+            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+            sqlDataAdapter.SelectCommand = sqlCommand;
+
+            //create DataSet object
+            DataSet dtSet = new DataSet();
+            sqlDataAdapter.Fill(dtSet);
+
+            gvOrders.DataSource = dtSet.Tables[0];
+            gvOrders.DataBind();
+
+        }
