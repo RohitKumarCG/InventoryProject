@@ -1,4 +1,4 @@
-    <Window.Resources>
+       <Window.Resources>
         <Style x:Key="MyTextBoxStyle" TargetType="{x:Type TextBox}">
             <Setter Property="FontSize" Value="16px"></Setter>
             <Setter Property="Background" Value="#e7e7e7"></Setter>
@@ -31,6 +31,7 @@
             <Setter Property="Height" Value="30"></Setter>
         </Style>
     </Window.Resources>
+    
     <Grid Background="PeachPuff">
 
         <Label Content="New Product" HorizontalAlignment="Left" Margin="100,9,0,0" FontSize="22px" FontWeight="DemiBold" VerticalAlignment="Top" Width="241"/>
@@ -40,12 +41,12 @@
         <Label Content="Unit Price *"  Margin="106,222,0,0" Style="{StaticResource MyLabelStyle}"/>
         <Label Content="Select Category" Margin="106,297,0,0" Style="{StaticResource MyLabelStyle}"/>
 
-        <ComboBox HorizontalAlignment="Left" Margin="286,297,0,0" VerticalAlignment="Top" Width="200" FontSize="14px" FontWeight="Medium">
-            <ComboBoxItem Content="Juice" IsSelected="True" Style="{StaticResource MyComboBoxItemStyle}"/>
-            <ComboBoxItem Content="Energy Drink" Style="{StaticResource MyComboBoxItemStyle}"/>
-            <ComboBoxItem Content="Mocktail" Style="{StaticResource MyComboBoxItemStyle}"/>
-            <ComboBoxItem Content="Tonic Water" Style="{StaticResource MyComboBoxItemStyle}"/>
-            <ComboBoxItem Content="Soft Drink" Style="{StaticResource MyComboBoxItemStyle}"/>
+        <ComboBox x:Name="cmbProductType" HorizontalAlignment="Left" Margin="286,297,0,0" VerticalAlignment="Top" Width="200" FontSize="14px" FontWeight="Medium">
+            <ComboBoxItem x:Name="cmbItem1" Content="Juice" IsSelected="True" Style="{StaticResource MyComboBoxItemStyle}"/>
+            <ComboBoxItem x:Name="cmbItem2" Content="Energy Drink" Style="{StaticResource MyComboBoxItemStyle}"/>
+            <ComboBoxItem x:Name="cmbItem3" Content="Mocktail" Style="{StaticResource MyComboBoxItemStyle}"/>
+            <ComboBoxItem x:Name="cmbItem4" Content="Tonic Water" Style="{StaticResource MyComboBoxItemStyle}"/>
+            <ComboBoxItem x:Name="cmbItem5" Content="Soft Drink" Style="{StaticResource MyComboBoxItemStyle}"/>
         </ComboBox>
 
         <TextBox x:Name="txtProductName" PreviewTextInput="literalValidation" Margin="286,72,0,0" Text="" Style ="{StaticResource MyTextBoxStyle}" />
@@ -59,3 +60,4 @@
         <Button Content="Save" Margin="587,365,0,0" Style="{StaticResource MyButtonStyle}" Click="BtnNPSave_Click"/>
 
     </Grid>
+    
