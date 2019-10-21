@@ -1,4 +1,4 @@
-        //on reset button click
+       //on reset button click
         private void BtnNRMReset_Click(object sender, RoutedEventArgs e)
         {
             txtRawMaterialName.Text = string.Empty;
@@ -39,8 +39,8 @@
         //on home button click
         private void BtnNRMHome_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
+            SystemUserHome systemUserHome = new SystemUserHome();
+            systemUserHome.Show();
             this.Close();
         }
 
