@@ -17,3 +17,51 @@
             <StackPanel></StackPanel>
         </DockPanel>
     </Grid>
+
+
+
+
+
+------------------------System User Home---------------------------------------------------
+
+    <Window.Resources>
+
+        <Style x:Key="MyLabelStyle" TargetType="{x:Type Label}">
+            <Setter Property="FontSize" Value="15px"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+            <Setter Property="VerticalAlignment" Value="Top"></Setter>
+            <Setter Property="Width" Value="150"></Setter>
+            <Setter Property="Height" Value="30"></Setter>
+        </Style>
+
+    </Window.Resources>
+    <Grid Background="PeachPuff">
+        <DockPanel Margin="0,0,0,392">
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Background="Linen" Header="Raw Material">
+                    <MenuItem Header="Add New Raw Material" Click="BtnAddNewRawMaterial_Click"/>
+                    <MenuItem Header="Manage Raw Materials" Click="BtnManageRawMaterials_Click"/>
+                </MenuItem>
+                <MenuItem Background="Linen" Header="Product">
+                    <MenuItem Header="Add New Product" Click="BtnAddNewProduct_Click"/>
+                    <MenuItem Header="Manage Products" Click="BtnManageProducts_Click"/>
+                </MenuItem>
+                <MenuItem Background="Linen" Header="Order">
+                    <MenuItem Header="New Order"/>
+                    <MenuItem Header="Delete Order"/>
+                </MenuItem>
+                <MenuItem Background="Linen" Header="Logout" Click="BtnSystemUserLogout">
+                </MenuItem>
+            </Menu>
+            <StackPanel Margin="0,0,0,401">
+            </StackPanel>
+        </DockPanel>
+        <Label Content="System User" Margin="45,50,0,0" Style="{StaticResource MyLabelStyle}"/>
+        <Label Content="Raw Material Count" Margin="45,110,0,0" Style="{StaticResource MyLabelStyle}"/>
+        <Label Content="Product Count" Margin="45,170,0,0" Style="{StaticResource MyLabelStyle}"/>
+        <Label x:Name="lblRMCount" Content="..." Margin="251,110,0,0" Style="{StaticResource MyLabelStyle}"/>
+        <Label x:Name="lblPCount" Content="..." Margin="251,170,0,0" Style="{StaticResource MyLabelStyle}"/>
+        
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="32" Margin="45,110,0,0" VerticalAlignment="Top" Width="253"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="32" Margin="45,170,0,0" VerticalAlignment="Top" Width="253"/>
+    </Grid>
