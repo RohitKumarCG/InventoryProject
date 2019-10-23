@@ -4,32 +4,36 @@
 
 <html>
 <head runat="server">
-    <title>
-        <asp:ContentPlaceHolder ID="Title" runat="server">
-        </asp:ContentPlaceHolder>
-    </title>
+    <title></title>
     <link href="Master.css" rel="stylesheet" />
-    
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
 </head>
 <body>
     <form id="form1" runat="server">
-            <div class="menu">
-                <ul>
-                    <li><a href="WebForm1.aspx">Home</a></li>
-                    <li><a href="#">Supplier</a></li>
-                    <li><a href="#">Raw Material</a></li>
-                    <li><a href="#">Product</a></li>
-                    <li><a href="#">Order</a></li>
-                    <li><a href="#">Distributor</a></li>
-                    <li><a href="#">Logout</a></li>
-                </ul>
-                <div class="content">
-                    <asp:ContentPlaceHolder ID="contentBody" runat="server">
-                    </asp:ContentPlaceHolder>
-                </div>
+        
+        <div class="div">
+            <div class="menu-title"> 
+                <h4>Drink & Delight Inventory Management System</h4>
             </div>
+
+            <div ID="menu-div" >
+                <asp:Menu ID="NavMenu" runat="server" Orientation="Horizontal" syt>
+                    <Items>
+                        <asp:MenuItem Text="Raw Materials" NavigateUrl="~/WebForm1.aspx" />
+                        <asp:MenuItem Text="Suppliers  " NavigateUrl="#" />
+                        <asp:MenuItem Text="Distributors  " NavigateUrl="#" />
+                        <asp:MenuItem Text="Raw Material Order  " NavigateUrl="#" />
+                        <asp:MenuItem Text="Product Order" NavigateUrl="#" />
+                    </Items>
+                </asp:Menu>
+            </div>
+        </div>
+
+        <div class="container">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
     </form>
 </body>
 </html>
