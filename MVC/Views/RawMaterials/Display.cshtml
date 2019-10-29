@@ -1,0 +1,50 @@
+﻿@model List<Inventory.Mvc.Models.RawMaterialViewModel>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Display</title>
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="~/Scripts/umd/popper.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+</head>
+<body>
+    <h2>Raw Materials</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Raw Material Name</th>
+                <th>Raw Material Code</th>
+                <th>Raw Material Price</th>
+                <th>Action</th>
+            </tr>
+
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.RawMaterialName</td>
+                    <td>@item.RawMaterialCode</td>
+                    <td>@item.RawMaterialUnitPrice</td>
+                    <td>
+                        <a href="@Url.Action("Edit", "RawMaterials",new { id = item.RawMaterialID })">Edit &nbsp;</a>
+                        <button class="btn btn-outline-danger"
+                                formaction="@Url.Action("Create", "RawMaterials")">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+    <a href="@Url.Action("Create", "RawMaterials")">Add New Raw Material</a>
+</body>
+</html>
