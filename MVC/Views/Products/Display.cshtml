@@ -1,52 +1,39 @@
 ﻿@model List<Inventory.Mvc.Models.ProductViewModel>
 
-<!DOCTYPE html>
+@{
+    Layout = "~/Views/Shared/SystemUserLayout.cshtml";
+}
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Display</title>
-    <script src="~/Scripts/jquery-3.4.1.js"></script>
-    <script src="~/Scripts/umd/popper.js"></script>
-    <script src="~/Scripts/bootstrap.js"></script>
-    <link href="~/Content/bootstrap.css" rel="stylesheet" />
-</head>
-<body>
-    <h2>Products</h2>
-    <table class="table">
-        <thead>
+<h3 style="color:#808080">Products</h3>
+<table class="table">
+    <thead>
+        <tr style="background:#bab5b5">
+            <th>Product Name</th>
+            <th>Product Type</th>
+            <th>Product Code</th>
+            <th>Product Price</th>
+            <th>Action</th>
+        </tr>
+
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
             <tr>
-                <th>Product Name</th>
-                <th>Product Type</th>
-                <th>Product Code</th>
-                <th>Product Price</th>
-                <th>Action</th>
+                <td>@item.ProductName</td>
+                <td>@item.ProductType</td>
+                <td>@item.ProductCode</td>
+                <td>@item.ProductUnitPrice</td>
+                <td>
+                    <a href="@Url.Action("Edit", "Products",new { id = item.ProductID })">Edit &nbsp;</a>
+                    <a href="@Url.Action("Delete", "Products",new { id = item.ProductID })">Delete &nbsp;</a>
+                </td>
             </tr>
+        }
 
-        </thead>
-        <tbody>
+    </tbody>
 
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.ProductName</td>
-                    <td>@item.ProductType</td>
-                    <td>@item.ProductCode</td>
-                    <td>@item.ProductUnitPrice</td>
-                    <td>
-                        <a href="@Url.Action("Edit", "Products",new { id = item.ProductID })">Edit &nbsp;</a>
-                        <button class="btn btn-outline-danger"
-                                formaction="@Url.Action("Delete", "Products")">
-                            Delete
-                        </button>
-                    </td>
-                </tr>
-            }
+</table>
 
-        </tbody>
-
-    </table>
-
-    <a href="@Url.Action("Create", "Products")">Add New Product</a>
-</body>
-</html>
+<a href="@Url.Action("Create", "Products")">Add New Product</a>

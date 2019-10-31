@@ -1,15 +1,14 @@
 ﻿@model Inventory.Mvc.Models.RawMaterialViewModel
 
-
 @{
     Layout = "~/Views/Shared/SystemUserLayout.cshtml";
 }
 
 <div class="container-fluid">
     <div class="mx-auto">
-        <h3 style="color:#808080">Edit Raw Material</h3>
+        <h3 style="color:#808080">Delete Raw Material</h3>
 
-        @using (Html.BeginForm("Edit", "RawMaterials", FormMethod.Post))
+        @using (Html.BeginForm("Delete", "RawMaterials", FormMethod.Post))
         {
             @Html.HiddenFor(temp => temp.RawMaterialID)
 
@@ -23,7 +22,7 @@
 
                         <div class="col-lg-8">
                             @Html.TextBoxFor(temp => temp.RawMaterialName,
-                            new{@class="form-control col-lg-8", placeholder = "Raw Material Name" })
+                            new{@class="form-control col-lg-8", @readonly="readonly", placeholder = "Raw Material Name"})
 
                             @Html.ValidationMessageFor(temp => temp.RawMaterialName)
                         </div>
@@ -35,7 +34,7 @@
 
                         <div class="col-lg-8">
                             @Html.TextBoxFor(temp => temp.RawMaterialCode,
-                            new{@class="form-control col-lg-8", placeholder = "Raw Material Code" })
+                            new{@class="form-control col-lg-8", @readonly = "readonly", placeholder = "Raw Material Code" })
 
                             @Html.ValidationMessageFor(temp => temp.RawMaterialCode)
                         </div>
@@ -47,14 +46,17 @@
 
                         <div class="col-lg-8">
                             @Html.TextBoxFor(temp => temp.RawMaterialUnitPrice,
-                            new{@class="form-control col-lg-8", placeholder = "Raw Material Price" })
+                            new{@class="form-control col-lg-8", @readonly = "readonly", placeholder = "Raw Material Price" })
 
                             @Html.ValidationMessageFor(temp => temp.RawMaterialUnitPrice)
                         </div>
                     </div>
 
                     <div class="border-top text-right pt-2">
-                        <button class="btn btn-success">Submit</button>
+                        <button class="btn btn-danger"
+                                onclick="return confirm('Are you sure to delete')">
+                            Delete
+                        </button>
                     </div>
 
                 </div>
