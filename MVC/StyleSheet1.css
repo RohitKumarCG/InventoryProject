@@ -1,0 +1,31 @@
+﻿/* Fixed sidenav, full height */
+.sidenav {
+    height: inherit;
+    width: 15%;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    background-color: #60d6e2;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+    /* Style the sidenav links and the dropdown button */
+    .sidenav a {
+        padding: 6px 8px 6px 16px;
+        text-decoration: none;
+        font-size: 20px;
+        color: #2f7dc8;
+        display: block;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+        outline: none;
+    }
+
+/* On mouse-over */
+.sidenav a:hover, .dropdown-btn:hover {
+    color: #f1f1f1;
+}
