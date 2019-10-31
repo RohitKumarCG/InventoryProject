@@ -1,4 +1,4 @@
-﻿@model List<Inventory.Mvc.Models.RawMaterialViewModel>
+﻿@model List<Inventory.Mvc.Models.ProductViewModel>
 
 <!DOCTYPE html>
 
@@ -12,13 +12,14 @@
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
 </head>
 <body>
-    <h2>Raw Materials</h2>
+    <h2>Products</h2>
     <table class="table">
         <thead>
             <tr>
-                <th>Raw Material Name</th>
-                <th>Raw Material Code</th>
-                <th>Raw Material Price</th>
+                <th>Product Name</th>
+                <th>Product Type</th>
+                <th>Product Code</th>
+                <th>Product Price</th>
                 <th>Action</th>
             </tr>
 
@@ -28,13 +29,14 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>@item.RawMaterialName</td>
-                    <td>@item.RawMaterialCode</td>
-                    <td>@item.RawMaterialUnitPrice</td>
+                    <td>@item.ProductName</td>
+                    <td>@item.ProductType</td>
+                    <td>@item.ProductCode</td>
+                    <td>@item.ProductUnitPrice</td>
                     <td>
-                        <a href="@Url.Action("Edit", "RawMaterials",new { id = item.RawMaterialID })">Edit &nbsp;</a>
+                        <a href="@Url.Action("Edit", "Products",new { id = item.ProductID })">Edit &nbsp;</a>
                         <button class="btn btn-outline-danger"
-                                formaction="@Url.Action("Delete", "RawMaterials")">
+                                formaction="@Url.Action("Delete", "Products")">
                             Delete
                         </button>
                     </td>
@@ -45,6 +47,6 @@
 
     </table>
 
-    <a href="@Url.Action("Create", "RawMaterials")">Add New Raw Material</a>
+    <a href="@Url.Action("Create", "Products")">Add New Product</a>
 </body>
 </html>

@@ -1,0 +1,76 @@
+﻿@model Inventory.Mvc.Models.ProductViewModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Edit Product</title>
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="~/Scripts/umd/popper.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="mx-auto">
+            <h2>Edit Product</h2>
+
+            @using (Html.BeginForm("Edit", "Products", FormMethod.Post))
+            {
+                @Html.HiddenFor(temp => temp.ProductID)
+                @Html.HiddenFor(temp => temp.ProductType)
+
+                <div class="row">
+
+                    <div class="col-md-6 mx-auto border-secondary">
+
+                        <div class="form-group form-row">
+                            @Html.LabelFor(temp => temp.ProductName, "Product Name",
+                             new {@class="col-form-label col-lg-3"})
+
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(temp => temp.ProductName,
+                                new{@class="form-control col-lg-9", placeholder = "Product Name" })
+
+                                @Html.ValidationMessageFor(temp => temp.ProductName)
+                            </div>
+                        </div>
+
+                        <div class="form-group form-row">
+                            @Html.LabelFor(temp => temp.ProductCode, "Product Code",
+                             new {@class="col-form-label col-lg-3" })
+
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(temp => temp.ProductCode,
+                                new{@class="form-control col-lg-9", placeholder = "Product Code" })
+
+                                @Html.ValidationMessageFor(temp => temp.ProductCode)
+                            </div>
+                        </div>
+
+                        <div class="form-group form-row">
+                            @Html.LabelFor(temp => temp.ProductUnitPrice, "Unit Price",
+                             new {@class="col-form-label col-lg-3" })
+
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(temp => temp.ProductUnitPrice,
+                                new{@class="form-control col-lg-9", placeholder = "Product Price" })
+                                @Html.ValidationMessageFor(temp => temp.ProductUnitPrice)
+                            </div>
+                        </div>
+
+                        <div class="border-top text-right pt-2">
+                            <button class="btn btn-success">Submit</button>
+                        </div>
+
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</body>
+</html>
