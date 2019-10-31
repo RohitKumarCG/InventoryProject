@@ -93,7 +93,7 @@ namespace Inventory.Mvc.Controllers
             }
         }
 
-        // URL: Products/Edit
+        // URL: Products/Edit/id
         public async Task<ActionResult> Edit(Guid id)
         {
             try
@@ -118,7 +118,7 @@ namespace Inventory.Mvc.Controllers
             }
         }
 
-        // URL: Products/Edit
+        // URL: Products/Edit/id
         [HttpPost]
         public async Task<ActionResult> Edit(ProductViewModel productVM)
         {
@@ -154,19 +154,44 @@ namespace Inventory.Mvc.Controllers
             }
         }
 
-        // URL: Products/Delete
-        [HttpPost]
+        // URL: Products/Delete/id
         public async Task<ActionResult> Delete(Guid id)
         {
-            bool isDeleted = true;
+            try
+            {
+                //creating object of ProductBL
+                ProductBL productBL = new ProductBL();
+                Product product = await productBL.GetProductByProductIDBL(id);
+
+                //Creating object of Product into ProductViewModel
+                ProductViewModel productVM = new ProductViewModel();
+                productVM.ProductID = product.ProductID;
+                productVM.ProductName = product.ProductName;
+                productVM.ProductType = product.ProductType;
+                productVM.ProductCode = product.ProductCode;
+                productVM.ProductUnitPrice = Convert.ToDouble(product.ProductUnitPrice);
+
+                return View(productVM);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        // URL: Products/Delete/id
+        [HttpPost]
+        public async Task<ActionResult> Delete(ProductViewModel productVM)
+        {
+            bool isDeleted = false;
             try
             {
                 //Creating object of ProductBL
                 ProductBL productBL = new ProductBL();
-                isDeleted = await productBL.DeleteProductBL(id);
+                isDeleted = await productBL.DeleteProductBL(productVM.ProductID);
                 if (isDeleted)
                 {
-                    return RedirectToAction("Create");
+                    return RedirectToAction("Display");
                 }
                 else
                 {

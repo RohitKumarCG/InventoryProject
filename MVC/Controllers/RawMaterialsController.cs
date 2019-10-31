@@ -112,7 +112,7 @@ namespace Inventory.Mvc.Controllers
             }
         }
 
-        // URL: RawMaterials/Edit
+        // URL: RawMaterials/Edit/id
         public async Task<ActionResult> Edit(Guid id)
         {
             try
@@ -142,7 +142,7 @@ namespace Inventory.Mvc.Controllers
             }
         }
 
-        // URL: RawMaterials/Edit
+        // URL: RawMaterials/Edit/id
         [HttpPost]
         public async Task<ActionResult> Edit(RawMaterialViewModel rawMaterialVM)
         {
@@ -177,19 +177,43 @@ namespace Inventory.Mvc.Controllers
             }
         }
 
-        // URL: RawMaterials/Delete
-        [HttpPost]
+        // URL: RawMaterials/Delete/id
         public async Task<ActionResult> Delete(Guid id)
         {
-            bool isDeleted = true;
             try
             {
                 //Creating object of RawMaterialBL
                 RawMaterialBL rawMaterialBL = new RawMaterialBL();
-                isDeleted = await rawMaterialBL.DeleteRawMaterialBL(id);
+                RawMaterial rawMaterial = await rawMaterialBL.GetRawMaterialByRawMaterialIDBL(id);
+
+                //Creating object of RawMaterial into RawMaterialViewModel
+                RawMaterialViewModel rawMaterialVM = new RawMaterialViewModel();
+                rawMaterialVM.RawMaterialID = rawMaterial.RawMaterialID;
+                rawMaterialVM.RawMaterialName = rawMaterial.RawMaterialName;
+                rawMaterialVM.RawMaterialCode = rawMaterial.RawMaterialCode;
+                rawMaterialVM.RawMaterialUnitPrice = Convert.ToDecimal(rawMaterial.RawMaterialUnitPrice);
+
+                return View(rawMaterialVM);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        // URL: RawMaterials/Delete/id
+        [HttpPost]
+        public async Task<ActionResult> Delete(RawMaterialViewModel rawMaterialViewModel)
+        {
+            bool isDeleted = false;
+            try
+            {
+                //Creating object of RawMaterialBL
+                RawMaterialBL rawMaterialBL = new RawMaterialBL();
+                isDeleted = await rawMaterialBL.DeleteRawMaterialBL(rawMaterialViewModel.RawMaterialID);
                 if (isDeleted)
                 {
-                    return RedirectToAction("Create");
+                    return RedirectToAction("Display");
                 }
                 else
                 {
