@@ -1,0 +1,14 @@
+use [13th Aug CLoud PT Immersive]
+go
+
+create function Team_D.GetRawMaterialName(@rawmaterialcode varchar(5))
+returns varchar(30)
+as
+begin
+	declare @rmname varchar(30)
+	set @rmname = (select RawMaterialUnitPrice from Team_D.RawMaterial where RawMaterialCode = @rawmaterialcode)
+	return isnull (@rmname,'')
+end
+
+select * from Team_D.RawMaterial
+select RawMaterialunitprice, Team_D.GetRawMaterialName('SDW') from Team_D.RawMaterial
