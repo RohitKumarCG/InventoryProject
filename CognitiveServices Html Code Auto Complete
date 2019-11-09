@@ -5,54 +5,57 @@
     <title></title>
     <script src="Scripts/jquery-3.4.1.js"></script>
     <script src="Scripts/jquery.validate.js"></script>
+    <style type="text/css">
+    </style>
 </head>
-<body onload="document.forms.bing.query.focus(); getSubscriptionKey();"><h1>AI</h1>
-      <form name="bing" oninput="return bingAutoSuggest(this.query.value, getSubscriptionKey())">
-          <h2>Autosuggest</h2>
-          <input type="text" name="query" size="80" placeholder="AutoSuggest" autocomplete="off" />
-      </form>
-      <h2>Results</h2>
-      <div id="results">
-          <p>None yet.</p>
-      </div>
+<body onload="document.forms.bing.query.focus(); getSubscriptionKey();">
+    <h1> AI Tutorial</h1>
+    <form name="bing" oninput="return bingAutosuggest(this.query.value, getSubscriptionKey())">
+        <h2>Auto Suggest</h2>
+        <input type="text" name="query" size="80" placeholder="Autosuggest" autocomplete="off" />
+    </form>
+    <h2>Results</h2>
+    <div id="results">
+        <p>None yet.</p>
+    </div>
+
 </body>
 </html>
-
 <script type="text/javascript">
     function pre(text) {
-        return "<pre>" + text.replace(/&/g, "&amp").replace(/</g, "&lt;") + "</pre>"
+        return "<pre>" + text.replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</pre>"
     }
     function renderSearchResults(results) {
         document.getElementById("results").innerHTML = pre(JSON.stringify(results, null, 2));
     }
     function renderErrorMessage(message, code) {
         if (code)
-            document.getElementById("results").innerHTML = "<pre>Status " + code + ": " + message + "</pre>";
+            document.getElementById("results").innerHTML = "<pre>Status" + code + ":" + message + "</pre>"
+
         else
             document.getElementById("results").innerHTML = "<pre>" + message + "</pre>";
     }
     function bingAutosuggest(query, key) {
-        var endpoint = "https://api.cpgnitive.microsoft.com/bing/v7.0/Suggestions";
-
+        var endpoint = "https://api.cognitive.microsoft.com/bing/v7.0/Suggestions";
         var request = new XMLHttpRequest();
-
         try {
             request.open("GET", endpoint + "?q=" + encodeURIComponent(query));
-        } catch (e) {
+        }
+        catch (e) {
             renderErrorMessage("Bad request");
-            return false;
         }
         request.setRequestHeader("Ocp-Apim-Subscription-Key", key);
-        request.addEventListener("load", function (){
+        request.addEventListener("load", function () {
             if (this.status === 200) {
-                renderSearchResults(JSON.stringify(this.responseText));
+                renderSearchResults(JSON.parse(this.responseText));
             }
             else {
-                if (this.status === 401) getSubscriptionKey(true);
+                if (this.status == 401) getSubscriptionKey(true);
                 renderErrorMessage(this.statusText, this.status);
             }
+
         });
-        request.addEventListener("error", function (){
+        request.addEventListener("error", function () {
             renderErrorMessage("Network error");
         });
         request.addEventListener("abort", function () {
@@ -69,8 +72,8 @@
         function findCookie(name) {
             var cookies = document.cookie.split(";");
             for (var i = 0; i < cookies.length; i++) {
-                var keyvalue = COOKIE[i].split("=");
-                if (keyvalue[0].trim() === name) {
+                var keyvalue = cookies[i].split("=");
+                if (keyvalue[0].trim() == name) {
                     return keyvalue[1];
                 }
             }
@@ -79,16 +82,17 @@
         function getSubscriptionKeyCookie() {
             var key = findCookie(COOKIE);
             while (key.length !== 32) {
-                key = prompt("Enter Bing Autosuggest API subscription key:", "").trim();
+                key = prompt("Enter Bing Autoseggest API subscription key:", "").trim();
                 var expiry = new Date();
                 expiry.setFullYear(expiry.getFullYear() + 2);
                 document.cookie = COOKIE + "=" + key.trim() + "; expires=" + expiry.toUTCString();
             }
             return key;
         }
+
         function getSubscriptionKeyLocalStorage() {
             var key = localStorage.getItem(COOKIE) || "";
-            while (key.length !== 32) 
+            while (key.length !== 32)
                 key = prompt("Enter Bing Autosuggest API subscription key:", "").trim();
             localStorage.setItem(COOKIE, key)
             return key;
@@ -97,13 +101,16 @@
             if (invalidate) {
                 try {
                     localStorage.removeItem(COOKIE);
-                } catch (e) {
+                }
+                catch (e) {
                     document.cookie = COOKIE + "=";
                 }
-            } else {
+            }
+            else {
                 try {
                     return getSubscriptionKeyLocalStorage();
-                } catch (e) {
+                }
+                catch (e) {
                     return getSubscriptionKeyCookie();
                 }
             }
