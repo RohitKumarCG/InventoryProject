@@ -26,11 +26,12 @@ namespace Inventory.MVC.ApiControllers
             return response;
         }
         
-        //URL: api/rawmaterials/id?
+        //URL: api/rawmaterials
         [HttpDelete]
-        public async Task<bool> DeleteRM(Guid id)
+        public async Task<bool> DeleteRM(RawMaterial rawMaterial)
         {
-            return await rawMaterialBL.DeleteRawMaterialBL(id);
+            Guid guid = rawMaterial.RawMaterialID;
+            return await rawMaterialBL.DeleteRawMaterialBL(guid);
         }
     }
 }
