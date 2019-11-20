@@ -1,0 +1,37 @@
+//URL: RawMaterials/Display
+        public ActionResult Display()
+        {
+            try
+            {
+                List<RawMaterialViewModel> rawMaterialsListVM = new List<RawMaterialViewModel>();
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("http://localhost:52606/api/");
+
+                    //Called Member default GET All records  
+                    //GetAsync to send a GET request
+                    var responseTask = client.GetAsync("RawMaterials");
+                    responseTask.Wait();
+
+                    //To store result of web api response.   
+                    var result = responseTask.Result;
+
+                    //If success received   
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var readTask = result.Content.ReadAsAsync<List<RawMaterialViewModel>>();
+                        readTask.Wait();
+
+                        rawMaterialsListVM = readTask.Result;
+                    }
+                }
+
+                //Calling view & passing viewmodel object to view
+                return View(rawMaterialsListVM);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
