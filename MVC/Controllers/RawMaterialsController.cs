@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Inventory.Mvc.Models;
 using Capgemini.Inventory.BusinessLayer;
 using Inventory.Entities;
-using Capgemini.Inventory.Exceptions;
 using System.Threading.Tasks;
 using System.Net.Http;
 
@@ -45,7 +42,7 @@ namespace Inventory.Mvc.Controllers
 
                 using (var client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri("http://localhost:52606/api/RawMaterials/");
+                    client.BaseAddress = new Uri("http://localhost:52606/api/");
 
                     //HTTP POST
                     var postTask = client.PostAsJsonAsync<RawMaterial>("RawMaterials", rawMaterial);
@@ -122,12 +119,6 @@ namespace Inventory.Mvc.Controllers
                 rawMaterialVM.RawMaterialCode = rawMaterial.RawMaterialCode;
                 rawMaterialVM.RawMaterialUnitPrice = Convert.ToDecimal(rawMaterial.RawMaterialUnitPrice);
 
-                ////Getting list of persons from PersonsBL
-                //List<Person> persons = personBL.GetPersons();
-
-                ////Add Persons to ViewBag
-                //ViewBag.PersonsList = new SelectList(persons, "PersonID", "PersonName");
-
                 return View(rawMaterialVM);
             }
             catch (Exception ex)
@@ -138,9 +129,8 @@ namespace Inventory.Mvc.Controllers
 
         // URL: RawMaterials/Edit/id
         [HttpPost]
-        public async Task<ActionResult> Edit(RawMaterialViewModel rawMaterialVM)
+        public ActionResult Edit(RawMaterialViewModel rawMaterialVM)
         {
-            bool isUpdated = false;
             try
             {
                 //Creating object of RawMaterialBL
@@ -153,16 +143,25 @@ namespace Inventory.Mvc.Controllers
                 rawMaterial.RawMaterialCode = rawMaterialVM.RawMaterialCode;
                 rawMaterial.RawMaterialUnitPrice = Convert.ToDecimal(rawMaterialVM.RawMaterialUnitPrice);
 
-                //calling Update method of BL
-                isUpdated = await rawMaterialBL.UpdateRawMaterialBL(rawMaterial);
-                if (isUpdated)
+                using (var client = new HttpClient())
                 {
-                    return RedirectToAction("Display");
+                    client.BaseAddress = new Uri("http://localhost:52606/api/");
+
+                    //HTTP POST
+                    var putTask = client.PutAsJsonAsync<RawMaterial>("RawMaterials", rawMaterial);
+                    putTask.Wait();
+
+                    var result = putTask.Result;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Display");
+                    }
+                    else
+                    {
+                        return Content("Raw Material not updated");
+                    }
                 }
-                else
-                {
-                    return Content("Raw Material not updated");
-                }
+                    
 
             }
             catch (Exception ex)
@@ -204,6 +203,7 @@ namespace Inventory.Mvc.Controllers
             {
                 //Creating object of RawMaterialBL
                 RawMaterialBL rawMaterialBL = new RawMaterialBL();
+
                 isDeleted = await rawMaterialBL.DeleteRawMaterialBL(rawMaterialViewModel.RawMaterialID);
                 if (isDeleted)
                 {
