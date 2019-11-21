@@ -8,6 +8,7 @@ using Capgemini.Inventory.BusinessLayer;
 using Inventory.Entities;
 using Capgemini.Inventory.Exceptions;
 using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace Inventory.Mvc.Controllers
 {
@@ -29,9 +30,8 @@ namespace Inventory.Mvc.Controllers
 
         // URL: RawMaterials/Create
         [HttpPost]
-        public async Task<ActionResult> Create(RawMaterialViewModel rawMaterialVM)
+        public ActionResult Create(RawMaterialViewModel rawMaterialVM)
         {
-            bool isAdded;
             try
             {
                 //creating object of RawMaterialBL
@@ -43,15 +43,23 @@ namespace Inventory.Mvc.Controllers
                 rawMaterial.RawMaterialCode = rawMaterialVM.RawMaterialCode;
                 rawMaterial.RawMaterialUnitPrice = Convert.ToDecimal(rawMaterialVM.RawMaterialUnitPrice);
 
-                //calling Add method of BL
-                isAdded = await rawMaterialBL.AddRawMaterialBL(rawMaterial);
-                if (isAdded)
+                using (var client = new HttpClient())
                 {
-                    return RedirectToAction("Display");
-                }
-                else
-                {
-                    return Content("Raw Material not added");
+                    client.BaseAddress = new Uri("http://localhost:52606/api/RawMaterials/");
+
+                    //HTTP POST
+                    var postTask = client.PostAsJsonAsync<RawMaterial>("RawMaterials", rawMaterial);
+                    postTask.Wait();
+
+                    var result = postTask.Result;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Display");
+                    }
+                    else
+                    {
+                        return Content("Raw Material Not Added");
+                    }
                 }
             }
             catch (Exception ex)
@@ -60,54 +68,40 @@ namespace Inventory.Mvc.Controllers
             }
         }
 
-        // URL: RawMaterials/Display
-        public async Task<ActionResult> Display()
+        //URL: RawMaterials/Display
+        public ActionResult Display()
         {
             try
             {
-                //creating object of RawMaterialBL
-                RawMaterialBL rawMaterialBL = new RawMaterialBL();
-
-                //creating list of RawMaterial and RawMaterialViewModel and storing all RawMaterial objects in rawMaterialsListVM
-                List<RawMaterial> rawMaterialsList = await rawMaterialBL.GetAllRawMaterialsBL();
                 List<RawMaterialViewModel> rawMaterialsListVM = new List<RawMaterialViewModel>();
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("http://localhost:52606/api/");
 
-                //Create proxy: used to call the service
-                ServiceReference1.RawMaterialsServiceClient rawMaterialsServiceClient = new ServiceReference1.RawMaterialsServiceClient();
+                    //Called Member default GET All records  
+                    //GetAsync to send a GET request
+                    var responseTask = client.GetAsync("RawMaterials");
+                    responseTask.Wait();
 
-                //Getting list of rawmaterials
-                ServiceReference1.RawMaterialDataContract[] rawMaterialsDC = rawMaterialsServiceClient.GetRawMaterials();
+                    //To store result of web api response.   
+                    var result = responseTask.Result;
 
-                //foreach (var item in rawMaterialsList)
-                //{
-                //    RawMaterialViewModel rawMaterialVM = new RawMaterialViewModel()
-                //    {
-                //        RawMaterialID = item.RawMaterialID,
-                //        RawMaterialName = item.RawMaterialName,
-                //        RawMaterialCode = item.RawMaterialCode,
-                //        RawMaterialUnitPrice = Convert.ToDouble(item.RawMaterialUnitPrice)
-                //    };
-
-                //    rawMaterialsListVM.Add(rawMaterialVM);
-                //}
-
-                //Convert data from DataContract to ViewModel
-                List<RawMaterialViewModel> rawMaterialsVM = rawMaterialsDC
-                    .Select
-                    (temp => new RawMaterialViewModel()
+                    //If success received   
+                    if (result.IsSuccessStatusCode)
                     {
-                        RawMaterialID = temp.RawMaterialID,
-                        RawMaterialName = temp.RawMaterialName,
-                        RawMaterialCode = temp.RawMaterialCode,
-                        RawMaterialUnitPrice = Convert.ToDecimal(temp.RawMaterialUnitPrice)
+                        var readTask = result.Content.ReadAsAsync<List<RawMaterialViewModel>>();
+                        readTask.Wait();
+
+                        rawMaterialsListVM = readTask.Result;
                     }
-                ).ToList();
+                }
 
                 //Calling view & passing viewmodel object to view
-                return View(rawMaterialsVM);
+                return View(rawMaterialsListVM);
             }
             catch (Exception ex)
             {
+
                 throw ex;
             }
         }
@@ -120,7 +114,7 @@ namespace Inventory.Mvc.Controllers
                 //Creating object of RawMaterialBL
                 RawMaterialBL rawMaterialBL = new RawMaterialBL();
                 RawMaterial rawMaterial = await rawMaterialBL.GetRawMaterialByRawMaterialIDBL(id);
-                
+
                 //Creating object of RawMaterial into RawMaterialViewModel
                 RawMaterialViewModel rawMaterialVM = new RawMaterialViewModel();
                 rawMaterialVM.RawMaterialID = rawMaterial.RawMaterialID;
@@ -227,3 +221,55 @@ namespace Inventory.Mvc.Controllers
         }
     }
 }
+
+////URL: RawMaterials/Display
+//public async Task<ActionResult> Display()
+//{
+//    try
+//    {
+//        //creating object of RawMaterialBL
+//        RawMaterialBL rawMaterialBL = new RawMaterialBL();
+
+//        //creating list of RawMaterial and RawMaterialViewModel and storing all RawMaterial objects in rawMaterialsListVM
+//        List<RawMaterial> rawMaterialsList = await rawMaterialBL.GetAllRawMaterialsBL();
+//        List<RawMaterialViewModel> rawMaterialsListVM = new List<RawMaterialViewModel>();
+
+//        ////Create proxy: used to call the service
+//        //ServiceReference1.RawMaterialsServiceClient rawMaterialsServiceClient = new ServiceReference1.RawMaterialsServiceClient();
+
+//        ////Getting list of rawmaterials
+//        //ServiceReference1.RawMaterialDataContract[] rawMaterialsDC = rawMaterialsServiceClient.GetRawMaterials();
+
+//        foreach (var item in rawMaterialsList)
+//        {
+//            RawMaterialViewModel rawMaterialVM = new RawMaterialViewModel()
+//            {
+//                RawMaterialID = item.RawMaterialID,
+//                RawMaterialName = item.RawMaterialName,
+//                RawMaterialCode = item.RawMaterialCode,
+//                RawMaterialUnitPrice = Convert.ToDecimal(item.RawMaterialUnitPrice)
+//            };
+
+//            rawMaterialsListVM.Add(rawMaterialVM);
+//        }
+
+//        ////Convert data from DataContract to ViewModel
+//        //List<RawMaterialViewModel> rawMaterialsVM = rawMaterialsDC
+//        //    .Select
+//        //    (temp => new RawMaterialViewModel()
+//        //    {
+//        //        RawMaterialID = temp.RawMaterialID,
+//        //        RawMaterialName = temp.RawMaterialName,
+//        //        RawMaterialCode = temp.RawMaterialCode,
+//        //        RawMaterialUnitPrice = Convert.ToDecimal(temp.RawMaterialUnitPrice)
+//        //    }
+//        //).ToList();
+
+//        //Calling view & passing viewmodel object to view
+//        return View(rawMaterialsListVM);
+//    }
+//    catch (Exception ex)
+//    {
+//        throw ex;
+//    }
+//}
