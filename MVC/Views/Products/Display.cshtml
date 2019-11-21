@@ -5,13 +5,13 @@
 }
 
 <h3 style="color:#808080">Products</h3>
-<table class="table">
+<table id="table1" class="table">
     <thead>
         <tr style="background:#bab5b5">
             <th>Product Name</th>
             <th>Product Type</th>
             <th>Product Code</th>
-            <th>Product Price</th>
+            <th>Product Price(INR)</th>
             <th>Action</th>
         </tr>
 
@@ -37,3 +37,9 @@
 </table>
 
 <a href="@Url.Action("Create", "Products")">Add New Product</a>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#table1').DataTable();
+    });
+</script>

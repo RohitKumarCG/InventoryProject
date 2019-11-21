@@ -23,7 +23,7 @@
 
                         <div class="col-lg-9">
                             @Html.TextBoxFor(temp => temp.ProductName,
-                            new{@class="form-control col-lg-9", placeholder = "Product Name" })
+                            new{@class= "form-control col-lg-9 productName", placeholder = "Product Name", maxlength = "30" })
 
                             @Html.ValidationMessageFor(temp => temp.ProductName)
                         </div>
@@ -35,7 +35,7 @@
 
                         <div class="col-lg-9">
                             @Html.TextBoxFor(temp => temp.ProductCode,
-                            new{@class="form-control col-lg-9", placeholder = "Product Code" })
+                            new{@class= "form-control col-lg-9 productCode", placeholder = "Product Code", maxlength = "5" })
 
                             @Html.ValidationMessageFor(temp => temp.ProductCode)
                         </div>
@@ -47,13 +47,16 @@
 
                         <div class="col-lg-9">
                             @Html.TextBoxFor(temp => temp.ProductUnitPrice,
-                            new{@class="form-control col-lg-9", placeholder = "Product Price" })
+                            new{@class= "form-control col-lg-9 productPrice", placeholder = "Product Price" })
                             @Html.ValidationMessageFor(temp => temp.ProductUnitPrice)
                         </div>
                     </div>
 
                     <div class="border-top text-right pt-2">
-                        <button class="btn btn-success">Submit</button>
+                        <button class="btn btn-success" id="createButton"
+                                onclick="return confirm('Are you sure')">
+                            Edit
+                        </button>
                     </div>
 
                 </div>
@@ -62,3 +65,20 @@
 
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $('#createButton').attr('disabled', 'disabled');
+        });
+
+        $('input[type=text],input[type=text],input[type=text]').keyup(function () {
+            if ($('.productName').val().length > 2 && $('.productCode').val().length > 1 && $('.productPrice').val() != '') {
+                $('#createButton').removeAttr('disabled');
+            }
+            else {
+                $('#createButton').attr('disabled', 'disabled');
+            }
+        });
+    });
+</script>

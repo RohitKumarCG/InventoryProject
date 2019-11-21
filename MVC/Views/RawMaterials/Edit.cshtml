@@ -73,7 +73,7 @@
         });
 
         $('input[type=text],input[type=text],input[type=text]').keyup(function () {
-            if ($('.rawMaterialName').val().length > 2 && $('.rawMaterialCode').val().length > 2 && $('.rawMaterialPrice').val() != '') {
+            if ($('.rawMaterialName').val().length > 2 && $('.rawMaterialCode').val().length > 1 && $('.rawMaterialPrice').val() != '') {
                 $('#editButton').removeAttr('disabled');
             }
             else {
