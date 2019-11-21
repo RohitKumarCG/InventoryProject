@@ -19,8 +19,8 @@ namespace Inventory.Mvc.Models
 
         [Required(ErrorMessage = "Product Code can't be blank")]
         [RegularExpression("^[A-Za-z]*$", ErrorMessage = "Code should contain alphabets only without spaces")]
-        [MinLength(3, ErrorMessage = "Code should contain atleast 3 alphabets")]
-        [MaxLength(30, ErrorMessage = "Code cannot contain more than 30 alphabets")]
+        [MinLength(2, ErrorMessage = "Code should contain atleast 2 alphabets")]
+        [MaxLength(5, ErrorMessage = "Code cannot contain more than 5 alphabets")]
         public string ProductCode { get; set; }
 
         public string ProductType { get; set; }
