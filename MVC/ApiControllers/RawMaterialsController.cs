@@ -9,36 +9,59 @@ using System;
 
 namespace Inventory.MVC.ApiControllers
 {
-    // Developed by Group 4
-    // Creation Date : 2019/12/11
-    // Last Modified Date : 
+    // Developed by Rohit Kumar (Group 4)
+    // Creation Date : 2019/11/12
+    // Last Modified Date : 2019/11/21
 
     public class RawMaterialsController : ApiController
     {
         private RawMaterialBL rawMaterialBL = new RawMaterialBL();
 
         //URL: api/rawMaterials
+        [HttpGet]
         public async Task<HttpResponseMessage> GetRawMaterials()
         {
-            List<RawMaterial> rawMaterials = await rawMaterialBL.GetAllRawMaterialsBL();
-            HttpResponseMessage response;
-            response = Request.CreateResponse(HttpStatusCode.OK, rawMaterials);
-            return response;
+            try
+            {
+                List<RawMaterial> rawMaterials = await rawMaterialBL.GetAllRawMaterialsBL();
+                HttpResponseMessage response;
+                response = Request.CreateResponse(HttpStatusCode.OK, rawMaterials);
+                return response;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         //URL: api/rawMaterials
         [HttpPost]
         public async Task<IHttpActionResult> PostRawMaterials(RawMaterial rawMaterial)
         {
-            bool isAdded = await rawMaterialBL.AddRawMaterialBL(rawMaterial);
-            return Ok();
+            try
+            {
+                bool isAdded = await rawMaterialBL.AddRawMaterialBL(rawMaterial);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        //URL: api/rawmaterials
-        [HttpDelete]
-        public async Task<bool> DeleteRM(Guid rawMaterialID)
+        //URL: api/rawMaterials
+        [HttpPut]
+        public async Task<IHttpActionResult> PutRawMaterials(RawMaterial rawMaterial)
         {
-            return await rawMaterialBL.DeleteRawMaterialBL(rawMaterialID);
+            try
+            {
+                await rawMaterialBL.UpdateRawMaterialBL(rawMaterial);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
