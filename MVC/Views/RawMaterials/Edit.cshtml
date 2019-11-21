@@ -69,15 +69,15 @@
 <script>
     $(document).ready(function () {
         $(function () {
-            $('#editButton').attr('disabled', 'disabled');
+            $('#createButton').attr('disabled', 'disabled');
         });
 
         $('input[type=text],input[type=text],input[type=text]').keyup(function () {
-            if ($('.rawMaterialName').val().length > 2 && $('.rawMaterialCode').val().length > 1 && $('.rawMaterialPrice').val() != '') {
-                $('#editButton').removeAttr('disabled');
+            if ($('form').valid()) {
+                $('#createButton').removeAttr('disabled');
             }
             else {
-                $('#editButton').attr('disabled', 'disabled');
+                $('#createButton').attr('disabled', 'disabled');
             }
         });
     });
