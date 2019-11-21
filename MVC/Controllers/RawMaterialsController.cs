@@ -39,7 +39,8 @@ namespace Inventory.Mvc.Controllers
                 rawMaterial.RawMaterialName = rawMaterialVM.RawMaterialName;
                 rawMaterial.RawMaterialCode = rawMaterialVM.RawMaterialCode;
                 rawMaterial.RawMaterialUnitPrice = Convert.ToDecimal(rawMaterialVM.RawMaterialUnitPrice);
-
+                
+                //instance of HttpClient created to act as a session to send Http Requests
                 using (var client = new HttpClient())
                 {
                     client.BaseAddress = new Uri("http://localhost:52606/api/");
