@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Capgemini.Inventory.BusinessLayer;
 using Inventory.Entities;
 using System.Web.Mvc;
@@ -21,7 +19,7 @@ namespace Inventory.Mvc.Controllers
         {
             //Creating and initializing viewmodel object
             ProductViewModel productViewModel = new ProductViewModel();
-            
+
             //Calling view and passing viewmodel object to view
             return View(productViewModel);
         }
