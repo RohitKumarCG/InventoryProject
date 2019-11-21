@@ -4,13 +4,15 @@
     Layout = "~/Views/Shared/SystemUserLayout.cshtml";
 }
 
+
+
 <h3 style="color:#808080">Raw Materials</h3>
-<table class="table">
+<table id ="table1" class="table">
     <thead>
         <tr style="background:#bab5b5">
             <th>Raw Material Name</th>
             <th>Raw Material Code</th>
-            <th>Raw Material Price</th>
+            <th>Raw Material Price(INR)</th>
             <th>Action</th>
         </tr>
 
@@ -35,3 +37,9 @@
 </table>
 
 <a href="@Url.Action("Create", "RawMaterials")">Add New Raw Material</a>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#table1').DataTable();
+    });
+</script>

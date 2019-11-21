@@ -1,6 +1,5 @@
 ﻿@model Inventory.Mvc.Models.RawMaterialViewModel
 
-
 @{
     Layout = "~/Views/Shared/SystemUserLayout.cshtml";
 }
@@ -23,7 +22,7 @@
 
                         <div class="col-lg-8">
                             @Html.TextBoxFor(temp => temp.RawMaterialName,
-                            new{@class="form-control col-lg-8", placeholder = "Raw Material Name" })
+                            new{@class= "form-control col-lg-8 rawMaterialName", placeholder = "Raw Material Name", maxlength = "30" })
 
                             @Html.ValidationMessageFor(temp => temp.RawMaterialName)
                         </div>
@@ -35,7 +34,7 @@
 
                         <div class="col-lg-8">
                             @Html.TextBoxFor(temp => temp.RawMaterialCode,
-                            new{@class="form-control col-lg-8", placeholder = "Raw Material Code" })
+                            new{@class= "form-control col-lg-8 rawMaterialCode", placeholder = "Raw Material Code", maxlength = "5" })
 
                             @Html.ValidationMessageFor(temp => temp.RawMaterialCode)
                         </div>
@@ -47,14 +46,17 @@
 
                         <div class="col-lg-8">
                             @Html.TextBoxFor(temp => temp.RawMaterialUnitPrice,
-                            new{@class="form-control col-lg-8", placeholder = "Raw Material Price" })
+                            new{@class="form-control col-lg-8 rawMaterialPrice", placeholder = "Raw Material Price" })
 
                             @Html.ValidationMessageFor(temp => temp.RawMaterialUnitPrice)
                         </div>
                     </div>
 
                     <div class="border-top text-right pt-2">
-                        <button class="btn btn-success">Submit</button>
+                        <button class="btn btn-success" id="editButton"
+                                onclick="return confirm('Are you sure')">
+                            Edit
+                        </button>
                     </div>
 
                 </div>
@@ -63,3 +65,20 @@
 
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $('#editButton').attr('disabled', 'disabled');
+        });
+
+        $('input[type=text],input[type=text],input[type=text]').keyup(function () {
+            if ($('.rawMaterialName').val().length > 2 && $('.rawMaterialCode').val().length > 2 && $('.rawMaterialPrice').val() != '') {
+                $('#editButton').removeAttr('disabled');
+            }
+            else {
+                $('#editButton').attr('disabled', 'disabled');
+            }
+        });
+    });
+</script>
