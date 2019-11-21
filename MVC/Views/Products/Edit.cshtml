@@ -53,7 +53,7 @@
                     </div>
 
                     <div class="border-top text-right pt-2">
-                        <button class="btn btn-success" id="createButton"
+                        <button class="btn btn-success" id="editButton"
                                 onclick="return confirm('Are you sure')">
                             Edit
                         </button>
@@ -69,15 +69,15 @@
 <script>
     $(document).ready(function () {
         $(function () {
-            $('#createButton').attr('disabled', 'disabled');
+            $('#editButton').attr('disabled', 'disabled');
         });
 
         $('input[type=text],input[type=text],input[type=text]').keyup(function () {
-            if ($('.productName').val().length > 2 && $('.productCode').val().length > 1 && $('.productPrice').val() != '') {
-                $('#createButton').removeAttr('disabled');
+            if ($('form').valid()) {
+                $('#editButton').removeAttr('disabled');
             }
             else {
-                $('#createButton').attr('disabled', 'disabled');
+                $('#editButton').attr('disabled', 'disabled');
             }
         });
     });

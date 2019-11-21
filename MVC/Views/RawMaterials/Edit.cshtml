@@ -69,15 +69,15 @@
 <script>
     $(document).ready(function () {
         $(function () {
-            $('#createButton').attr('disabled', 'disabled');
+            $('#editButton').attr('disabled', 'disabled');
         });
 
         $('input[type=text],input[type=text],input[type=text]').keyup(function () {
             if ($('form').valid()) {
-                $('#createButton').removeAttr('disabled');
+                $('#editButton').removeAttr('disabled');
             }
             else {
-                $('#createButton').attr('disabled', 'disabled');
+                $('#editButton').attr('disabled', 'disabled');
             }
         });
     });

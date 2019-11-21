@@ -84,7 +84,7 @@
         });
 
         $('input[type=text],input[type=text],input[type=text]').keyup(function () {
-            if ($('.productName').val().length > 2 && $('.productCode').val().length > 1 && $('.productPrice').val() != '') {
+            if ($('form').valid()) {
                 $('#createButton').removeAttr('disabled');
             }
             else {
